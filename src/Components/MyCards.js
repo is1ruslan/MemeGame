@@ -6,7 +6,6 @@ export default function MyCards () {
 
     useEffect(() => {
         startMemes()
-        console.log('11')
     }, [])
 
     async function startMemes() {
@@ -14,7 +13,6 @@ export default function MyCards () {
         const response = await fetch('https://api.imgflip.com/get_memes')
         const data = await response.json()
         const memes = data.data.memes
-        console.log(memes.length)
 
         for (let i = 0; i < 7; i++) {
             const rand = Math.round(Math.random() * memes.length)
