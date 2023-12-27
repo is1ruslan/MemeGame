@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export default function startPage ({gameStarted, setGameStarted}) {
+export default function startPage ({setGameStarted}) {
 
     return (
         <div className='container'>

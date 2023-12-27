@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react'
 import Situations from './Situations'
 import MyMemes from './MyMemes'
 import Start from './Start'
-const socket = new WebSocket('ws://localhost:3000/')
+import GameField from './GameField'
+import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom'
+const socket = new WebSocket('ws://localhost:5000/')
 
 export default function App () {
     const [gameStarted, setGameStarted] = useState(false)
@@ -12,16 +14,24 @@ export default function App () {
     }
 
     return (
-        <div>
-            {
-            !gameStarted ?
-                <div className=''>
-                    <Situations />
-                    <MyMemes />
-                </div>
-            :
-            <Start setGameStarted={setGameStarted} />
-            }
-        </div>
+        <BrowserRouter>
+            <div>
+                {
+                !gameStarted ?
+                    // <Switch>
+                        // <Route path={path}>
+                        <div>
+                            <GameField />
+                            <Situations />
+                            <MyMemes />
+                        {/* </Route> */}
+                        <Redirect to={`${+new Date}`.toString(16)}/>
+                        </div>
+                    // </Switch>
+                :
+                <Start setGameStarted={setGameStarted} />
+                }
+            </div>
+        </BrowserRouter>
     )
 }
