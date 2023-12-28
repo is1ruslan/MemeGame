@@ -5,19 +5,22 @@ const socket = new WebSocket('ws://localhost:5000/')
 
 export default function GameField () {
     const usernameRef = useRef(null)
+    const params = useParams()
     const [gameState, setGameState] = useState()
     const [modal, setModal] = useState(true)
-    const params = useParams()
     const [username, setUsername] = useState('')
 
     useEffect(() => {  
         if (username) {
-            console.log(`Hi, ${username}`)
+            //console.log(`Hi, ${username}`)
             socket.send(JSON.stringify({
                 method: 'connection',
-                id: 56,
+                id: params.id,
                 username: username
             }))
+        }
+        socket.onmessage = (event) => {
+            console.log('You have a message:', event.data)
         }
     }, [username])
 

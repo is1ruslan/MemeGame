@@ -11,6 +11,11 @@ export default function App () {
 
     socket.onopen = () => {
         console.log('Connected')
+        socket.send(JSON.stringify('hello'))
+    }
+
+    socket.onmessage = (event) => {
+        console.log('You have a message:', event.data)
     }
 
     return (
@@ -18,16 +23,14 @@ export default function App () {
             <div>
                 {
                 !gameStarted ?
-                    // <Switch>
-                        // <Route path={path}>
-                        <div>
+                    <Switch>
+                        <Route path='/:id'>
                             <GameField />
                             <Situations />
                             <MyMemes />
-                        {/* </Route> */}
+                        </Route>
                         <Redirect to={`${+new Date}`.toString(16)}/>
-                        </div>
-                    // </Switch>
+                    </Switch>
                 :
                 <Start setGameStarted={setGameStarted} />
                 }
