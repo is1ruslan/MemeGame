@@ -11,10 +11,13 @@ app.ws('/', (ws, req) => {
     ws.on('message', (msg) => {
         msg = JSON.parse(msg)
         switch (msg.method) {
-            case 'connection':
+            case 'New connection':
                 connectionHandler(ws, msg)
-                console.log(msg.username)
+                console.log(msg)
                 break 
+            case 'stateUpdate':
+                console.log(msg.gamestate)
+                break
         }
     })
 })
