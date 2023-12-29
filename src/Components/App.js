@@ -26,8 +26,6 @@ export default function App () {
                     <Switch>
                         <Route path='/:id'>
                             <GameField />
-                            <Situations />
-                            <MyMemes />
                         </Route>
                         <Redirect to={`${+new Date}`.toString(16)}/>
                     </Switch>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-export default function MyMemes () {
-    const [myMemes, setMyMemes] = useState([])
+export default function MyMemes ({ myMemes, setMyMemes }) {
     const [unUsedMemes, setUnUsedMemes] = useState()
 
     useEffect(() => {
@@ -42,6 +41,11 @@ export default function MyMemes () {
         )
         setMyMemes(newMeme);
     }
+
+    // const handleAddUser = (userName) => {
+    //     const updatedGameState = addUser(gameState, userName, myMemes)
+    //     setGameState(updatedGameState)
+    // }
 
     let Memes = myMemes.map((meme, ind) => (
         <li key={ind}>

@@ -2,17 +2,22 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import MyMemes from './MyMemes'
+import Situations from './Situations'
 const socket = new WebSocket('ws://localhost:5000/')
 
-export default function GameField ({ myMemes }) {
+export default function GameField ({ situations, setsituations }) {
     const usernameRef = useRef(null)
     const params = useParams()
+    const [myMemes, setMyMemes] = useState([])
     const [gameState, setGameState] = useState([])
     const [modal, setModal] = useState(true)
     const [username, setUsername] = useState('')
 
+    
+
     useEffect(() => {  
         if (username) {
+            setGameState(gameState[username.memes])
             setGameState(prevState => {
                 const updatedState = addUser(prevState, username)
                 socket.send(JSON.stringify({
@@ -44,9 +49,11 @@ export default function GameField ({ myMemes }) {
         }
     }, [gameState])
 
-    const addUser = (currentState, userName) => {
+    console.log(myMemes)
+    const addUser = (prevState, userName) => {
+        console.log(myMemes)
         return {
-            ...currentState,
+            ...prevState,
             [userName]: {
                 memes: myMemes,
                 points: 0
@@ -79,7 +86,7 @@ export default function GameField ({ myMemes }) {
             
             <Modal centered show={modal} onHide={() => {}} >
                 <Modal.Header >
-                    <Modal.Title>Введите ваш никнейм</Modal.Title>
+                    <Modal.Title>Пиши ник</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <input type="text" ref={usernameRef}/>
@@ -90,6 +97,9 @@ export default function GameField ({ myMemes }) {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            <Situations situations={situations} setsituations={setsituations} />
+            <MyMemes myMemes={myMemes} setMyMemes={setMyMemes} />
         </div>
     )
 }
