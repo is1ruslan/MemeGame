@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-export default function MyMemes ({ myMemes, setMyMemes }) {
+export default function MyMemes ({ myMemes, setMyMemes, selectedMeme, setSelectedMeme }) {
     const [unUsedMemes, setUnUsedMemes] = useState()
 
     useEffect(() => {
@@ -34,10 +34,11 @@ export default function MyMemes ({ myMemes, setMyMemes }) {
     const changeMeme = async (ind) => {
         const memes = unUsedMemes
         const rand = Math.round(Math.random() * memes.length)
-        const newMeme = myMemes.map((meme, i) =>
+        const newMeme = myMemes.map((meme, i) => 
             i === ind ?
-            memes[rand].url :
-            meme
+                (setSelectedMeme(meme),
+                memes[rand].url )
+            : meme
         )
         setMyMemes(newMeme);
     }
