@@ -31,13 +31,18 @@ const connectionHandler = (ws, msg) => {
 let commonState = {}
 
 const broadcastConnection = (ws, msg) => {
+
+    if (!commonState[msg.id]) {
+        commonState[msg.id] = {};
+    }
+
     aWss.clients.forEach(client => {
         if (client.id === msg.id) {
-            commonState[msg.username] = {
+            commonState[msg.id][msg.username] = {
                 gamestate: msg.gamestate[msg.username]
             }
-            client.send(JSON.stringify(commonState))
         }
+        client.send(JSON.stringify(commonState[msg.id]))
     })
 
     console.log(commonState)
