@@ -13,11 +13,8 @@ export default function GameField ({ situations, setsituations }) {
     const [modal, setModal] = useState(true)
     const [username, setUsername] = useState('')
 
-    
-
     useEffect(() => {  
         if (username) {
-            setGameState(gameState[username.memes])
             setGameState(prevState => {
                 const updatedState = addUser(prevState, username)
                 socket.send(JSON.stringify({
@@ -34,7 +31,16 @@ export default function GameField ({ situations, setsituations }) {
         }
     }, [username])
 
-    useEffect(() => { 
+    useEffect(() => {
+        socket.onerror = (error) => {
+            console.error('WebSocket Error:', error)
+        }
+
+        socket.onclose = () => {
+            console.log('WebSocket connection closed.')
+        }
+
+        setGameState(prevState => updateMemes(prevState))
         if (Object.keys(gameState).length > 0) { 
             socket.send(JSON.stringify({
                 method: 'stateUpdate',
@@ -43,15 +49,15 @@ export default function GameField ({ situations, setsituations }) {
                 gamestate: gameState,
             }))
             console.log(gameState)
-            socket.onmessage = (event) => {
-                console.log('You have a message:', event.data)
-            }
+            // socket.onmessage = (event) => {
+            //     setGameState(prevState => event.data)
+            //     console.log(gameState)
+            //     console.log('You have a message:', event.data)
+            // }
         }
-    }, [gameState])
+    }, [myMemes])
 
-    console.log(myMemes)
     const addUser = (prevState, userName) => {
-        console.log(myMemes)
         return {
             ...prevState,
             [userName]: {
@@ -61,9 +67,27 @@ export default function GameField ({ situations, setsituations }) {
         }
     }
 
+    const updateMemes = (prevState) => {
+        return {
+            ...prevState, 
+            [username]: {
+                ...prevState[username],
+                memes: myMemes
+            }
+        }
+    }
+
+    const newUserConnected = (newUserName) => {
+        setGameState(prevState => ({
+            ...prevState,
+            [newUserName]: { memes: myMemes, points: 0 }
+        }))
+    }
+
     const connectHandler = () => {
         setUsername(usernameRef.current.value)
         setModal(false)
+        //newUserConnected(username)
     }
 
     const getPoint = () => {

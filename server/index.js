@@ -13,10 +13,9 @@ app.ws('/', (ws, req) => {
         switch (msg.method) {
             case 'New connection':
                 connectionHandler(ws, msg)
-                console.log(msg)
                 break 
             case 'stateUpdate':
-                console.log(msg.gamestate)
+                connectionHandler(ws, msg)
                 break
         }
     })
@@ -29,10 +28,17 @@ const connectionHandler = (ws, msg) => {
     broadcastConnection(ws, msg)
 }
 
+let commonState = {}
+
 const broadcastConnection = (ws, msg) => {
     aWss.clients.forEach(client => {
         if (client.id === msg.id) {
-            client.send(`User ${msg.username} connected`)
+            commonState[msg.username] = {
+                gamestate: msg.gamestate[msg.username]
+            }
+            client.send(JSON.stringify(commonState))
         }
     })
+
+    console.log(commonState)
 }
