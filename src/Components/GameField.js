@@ -3,7 +3,6 @@ import { Modal, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import MyMemes from './MyMemes'
 import Situations from './Situations'
-const socket = new WebSocket('ws://localhost:5000/')
 
 export default function GameField ({ situations, setsituations }) {
     const usernameRef = useRef(null)
@@ -20,51 +19,91 @@ export default function GameField ({ situations, setsituations }) {
 
 
     // New user connection
-    useEffect(() => {  
-        if (username) {
-            setGameState(prevState => {
-                const updatedState = addUser(prevState, username)
-                socket.send(JSON.stringify({
-                    method: 'New connection',
-                    id: params.id,
-                    username: username,
-                    gamestate: updatedState
-                }))
-                return updatedState
-            })
+    useEffect(() => { 
+        const socket = new WebSocket('ws://localhost:5000/')
+        
+        socket.onopen = () => {
+            if (username) {
+                setGameState(prevState => {
+                    const updatedState = addUser(prevState, username)
+                    socket.send(JSON.stringify({
+                        method: 'New connection',
+                        id: params.id,
+                        username: username,
+                        gamestate: updatedState
+                    }))
+                    return updatedState
+                })
+            }
         }
-        socket.onmessage = (event) => {
-            console.log('You have a message:', event.data)
-        }
+        
+        // socket.onmessage = (event) => {
+        //     setGameState(JSON.parse(event.data) || {})
+        //     console.log('New user connected:', event.data)
+        // }
     }, [username])
 
 
     // Update game state for all players
     useEffect(() => {
-        socket.onerror = (error) => {
-            console.error('WebSocket Error:', error)
-        }
-
-        socket.onclose = () => {
-            console.log('WebSocket connection closed.')
-        }
-
+        const socket = new WebSocket('ws://localhost:5000/')
         setGameState(prevState => updateMemes(prevState))
-        if (Object.keys(gameState).length > 0 && username) { 
-            socket.send(JSON.stringify({
-                method: 'stateUpdate',
-                id: params.id,
-                username: username,
-                gamestate: gameState,
+
+        socket.onopen = () => {
+            if (Object.keys(gameState).length > 0 && username) { 
+                socket.send(JSON.stringify({
+                    method: 'stateUpdate',
+                    id: params.id,
+                    username: username,
+                    gamestate: gameState,
             }))
-            console.log(gameState)
+        }
+        
+        console.log(gameState)
             // socket.onmessage = (event) => {
-            //     setGameState(prevState => event.data)
-            //     console.log(gameState)
-            //     console.log('You have a message:', event.data)
+            //     const data = JSON.parse(event)
+            //     if (event) {
+            //         setGameState(data.params.id)
+            //         console.log('data recieved')
+            //     } else if (data.method === 'updateVotes') {
+            //         setVotes(data.votes)
+            //     }
+            //     console.log('You have a message: ', event)
             // }
+            // console.log(gameState)
         }
     }, [myMemes, winner, voted, selectedMeme, votes])
+
+
+    // socket.onmessage = (event) => {
+    //     console.log('You have a message: ', event.data)
+    // }
+
+    useEffect(() => {
+        const socket = new WebSocket('ws://localhost:5000/')
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data)
+
+            if (data) {
+                setGameState(data)
+            } else if (data.method === 'updateVotes') {
+                setVotes(data.votes)
+            }
+
+            console.log('You have a message: ', event.data)
+            //console.log(data)
+        }
+        //console.log(gameState)
+    
+        socket.onclose = () => {
+            console.log('WebSocket connection closed')
+        }
+    
+        socket.onerror = (error) => {
+            console.error('WebSocket Error: ', error)
+        }
+    }, [])
 
 
     // For new users
@@ -77,11 +116,13 @@ export default function GameField ({ situations, setsituations }) {
         return {
             ...prevState,
             [userName]: {
-                memes: myMemes,
+                //memes: myMemes,
                 points: 0,
                 isVoted: voted,
                 selectedMeme: selectedMeme,
-                isWinner: winner
+                isWinner: winner,
+                round: round,
+                situation: 0,
             }
         }
     }
@@ -93,7 +134,7 @@ export default function GameField ({ situations, setsituations }) {
             ...prevState, 
             [username]: {
                 ...prevState[username],
-                memes: myMemes,
+                //memes: myMemes,
                 selectedMeme: selectedMeme
             }
         }
@@ -103,23 +144,23 @@ export default function GameField ({ situations, setsituations }) {
         setSelectedMeme(meme)
     }
 
-    const voteForMeme = (selectedUsername) => {
-        if (selectedUsername !== username) {
-            socket.send(JSON.stringify({
-                method: 'vote',
-                username: username,
-                voter: selectedUsername,
-                id: params.id
-            }))
-        }
-    }
+    // const voteForMeme = (selectedUsername) => {
+    //     if (selectedUsername !== username) {
+    //         socket.send(JSON.stringify({
+    //             method: 'vote',
+    //             username: username,
+    //             voter: selectedUsername,
+    //             id: params.id
+    //         }))
+    //     }
+    // }
 
-    socket.onmessage = (event) => {
-        const data = JSON.parse(event.data)
-        if (data.method === 'updateVotes') {
-            setVotes(data.votes)
-        }
-    }
+    // socket.onmessage = (event) => {
+    //     const data = JSON.parse(event.data)
+    //     if (data.method === 'updateVotes') {
+    //         setVotes(data.votes)
+    //     }
+    // }
 
     const endRound = () => {
         const newGameState = { ...gameState }
@@ -158,21 +199,18 @@ export default function GameField ({ situations, setsituations }) {
             <img src={selectedMeme} alt="Meme" />
         </div>  
     }
-    
+
     let players = Object.keys(gameState).map((playerName) => {
         const playerData = gameState[playerName]
         return (
             <div key={playerName} className="player">
                 <h3>{playerName}</h3>
                 <h5>{playerData.points}</h5>
-                {playerData.memes.map((meme, index) => (
-                    <Meme 
-                        key={index} 
-                        image={meme} 
-                        onVote={() => voteForMeme(playerName)} 
-                        isVotable={playerName !== username}
-                    />
-                ))}
+                {playerData.selectedMeme ?
+                    <img className='rounded mymemes selectedMeme' src={playerData.selectedMeme} alt='Selected meme' onClick={() => onVote()}/>
+                :
+                null
+                }
             </div>
         )
     })

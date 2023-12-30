@@ -9,15 +9,6 @@ const socket = new WebSocket('ws://localhost:5000/')
 export default function App () {
     const [gameStarted, setGameStarted] = useState(false)
 
-    socket.onopen = () => {
-        console.log('Connected')
-        socket.send(JSON.stringify('hello'))
-    }
-
-    socket.onmessage = (event) => {
-        console.log('You have a message:', event.data)
-    }
-
     return (
         <BrowserRouter>
             <div>
