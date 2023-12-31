@@ -239,6 +239,7 @@ export default function GameField ({ situations, setsituations }) {
             <img className='logo' src='https://i.pinimg.com/originals/4b/52/17/4b5217cc5d784890f44aeb01a5ad7db6.png' alt='logo' />
             {/* <button className='btn btn-primary' onClick={() => getPoint()}>+Point</button> */}
             
+            <h1 className='game-name'>Why are you mem?</h1>
             <h2 className='round'>Round: {gameState.currentRound}</h2>
 
             <Modal centered show={modal} onHide={() => {}} >
