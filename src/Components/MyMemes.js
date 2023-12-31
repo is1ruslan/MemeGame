@@ -13,7 +13,7 @@ export default function MyMemes ({ myMemes, setMyMemes, selectMeme, setSelectedM
         const data = await response.json()
         const memes = data.data.memes
 
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 9; i++) {
             const rand = Math.round(Math.random() * memes.length)
             arr[i] = memes[rand].url
         }
@@ -57,7 +57,7 @@ export default function MyMemes ({ myMemes, setMyMemes, selectMeme, setSelectedM
     return (
         <div>
             <div className="container">
-                <ul>
+                <ul className='memes-list'>
                     {Memes}
                 </ul>
             </div>

@@ -210,14 +210,16 @@ export default function GameField ({ situations, setsituations }) {
     //     </div>  
     // }
 
+    let styles = ['orange', 'red', 'blue', 'purple', 'pink', 'green', 'yellow', ]
     if (gameState?.users) {
         var players = Object.keys(gameState.users).map((playerName) => {
             if (playerName != 'users' && playerName != 'currentSituation' && playerName != 'currentRound') {
                 const playerData = gameState.users[playerName]
+                let playerStyle = styles[Math.floor(Math.random() * styles.length)]
                 return (
-                    <div key={playerName} className="player">
-                        <h3>{playerName}</h3>
-                        <h5>{playerData.points}</h5>
+                    <div key={playerName} className='player'>
+                        <h5 style={{color: playerStyle}}>{playerName}</h5>
+                        <h6 style={{color: playerStyle}}>{playerData.points}</h6>
                         {playerData.selectedMeme ?
                             <img className='rounded mymemes selectedMeme' src={playerData.selectedMeme} alt='Selected meme' onClick={() => voteForMeme(playerName)}/>
                         :
@@ -234,13 +236,14 @@ export default function GameField ({ situations, setsituations }) {
 
     return (
         <div className="game">
-            <button className='btn btn-primary' onClick={() => getPoint()}>+Point</button>
+            <img className='logo' src='https://i.pinimg.com/originals/4b/52/17/4b5217cc5d784890f44aeb01a5ad7db6.png' alt='logo' />
+            {/* <button className='btn btn-primary' onClick={() => getPoint()}>+Point</button> */}
             
             <h2 className='round'>Round: {gameState.currentRound}</h2>
 
             <Modal centered show={modal} onHide={() => {}} >
                 <Modal.Header >
-                    <Modal.Title>Пиши ник</Modal.Title>
+                    <Modal.Title>Пиши ник давай</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <input type="text" ref={usernameRef}/>
@@ -254,7 +257,7 @@ export default function GameField ({ situations, setsituations }) {
 
             <div className="players">{players}</div>
             <div className='mx-auto d-flex align-items-center justify-content-center'>
-                <div className='card text-black bg-warning m-3' style={{height: 300, width: 200}}>
+                <div className='situation card text-black bg-warning m-3' >
                     <div className='card-body d-flex align-items-center text-center'>
                         <p className='card-text'>
                             {gameState.currentSituation}
