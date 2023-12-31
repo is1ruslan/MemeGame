@@ -164,7 +164,8 @@ export default function GameField ({ situations, setsituations }) {
                 voteFor: selectedUsername,
                 id: params.id
             }))
-            setVoted(true);
+            setVoted(true)
+            console.log('New voter: ', username)
         }
     }
 
@@ -210,15 +211,15 @@ export default function GameField ({ situations, setsituations }) {
     // }
 
     if (gameState?.users) {
-        var players = Object.keys(gameState).map((playerName) => {
+        var players = Object.keys(gameState.users).map((playerName) => {
             if (playerName != 'users' && playerName != 'currentSituation' && playerName != 'currentRound') {
-                const playerData = gameState[playerName]
+                const playerData = gameState.users[playerName]
                 return (
                     <div key={playerName} className="player">
                         <h3>{playerName}</h3>
                         <h5>{playerData.points}</h5>
                         {playerData.selectedMeme ?
-                            <img className='rounded mymemes selectedMeme' src={gameState[playerName].selectedMeme} alt='Selected meme' onClick={() => voteForMeme(playerName)}/>
+                            <img className='rounded mymemes selectedMeme' src={playerData.selectedMeme} alt='Selected meme' onClick={() => voteForMeme(playerName)}/>
                         :
                         null
                         }
@@ -235,7 +236,7 @@ export default function GameField ({ situations, setsituations }) {
         <div className="game">
             <button className='btn btn-primary' onClick={() => getPoint()}>+Point</button>
             
-            <h2 className='round'>Round: {round}</h2>
+            <h2 className='round'>Round: {gameState.currentRound}</h2>
 
             <Modal centered show={modal} onHide={() => {}} >
                 <Modal.Header >
