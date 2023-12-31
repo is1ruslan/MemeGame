@@ -17,6 +17,7 @@ export default function GameField ({ situations, setsituations }) {
     const [voted, setVoted] = useState(false)
     //const [selectedMeme, setSelectedMeme] = useState(null);
     const [votes, setVotes] = useState({})
+    const [currentSituation, setCurrentSituation] = useState('')
 
 
     // New user connection
@@ -92,14 +93,16 @@ export default function GameField ({ situations, setsituations }) {
         newSocket.onmessage = (event) => {
             const data = JSON.parse(event.data)
 
-            if (data) {
+            if (data.method === 'getSituation') {
+                setCurrentSituation(data.situation)
+            } else if (data.method === 'updateVotes') {
+                setVotes(data.votes)
+            } else if (data) {
                 console.log(data)
                 setGameState(data)
                 // if (data[username] && data[username].selectedMeme) {
                 //     setSelectedMeme(data[username].selectedMeme)
                 // }
-            } else if (data.method === 'updateVotes') {
-                setVotes(data.votes)
             }
 
             console.log('You have a message: ', event.data)
@@ -134,7 +137,7 @@ export default function GameField ({ situations, setsituations }) {
                 selectedMeme: null,
                 isWinner: winner,
                 round: round,
-                situation: 0,
+                situation: currentSituation,
             }
         }
     }
@@ -220,6 +223,8 @@ export default function GameField ({ situations, setsituations }) {
         )
     })
 
+    
+
     return (
         <div className="game">
             <button className='btn btn-primary' onClick={() => getPoint()}>+Point</button>
@@ -241,7 +246,17 @@ export default function GameField ({ situations, setsituations }) {
             </Modal>
 
             <div className="players">{players}</div>
-            <Situations situations={situations} setsituations={setsituations} />
+            <div className='mx-auto d-flex align-items-center justify-content-center'>
+                <div className='card text-black bg-warning m-3' style={{height: 300, width: 200}}>
+                    <div className='card-body d-flex align-items-center text-center'>
+                        <p className='card-text'>
+                            {gameState.currentSituation}
+                            {/* {Object.values(gameState.users)[0]?.situation} */}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {/* <Situations currentSituation={currentSituation} setCurrentSituation={setCurrentSituation} /> */}
             <MyMemes myMemes={myMemes} setMyMemes={setMyMemes} selectMeme={selectMeme} />
         </div>
     )
