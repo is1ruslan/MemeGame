@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { situationsList } from './situationsList'
 
 export default function Situations () {
     //const [situations, setsituations] = useState(list)

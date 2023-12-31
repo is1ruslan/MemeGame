@@ -4,6 +4,8 @@ const WSServer = require('express-ws')(app)
 const aWss = WSServer.getWss()
 const PORT = process.env.PORT || 5000
 const situationsList = require('./situationsList')
+let commonState = {}
+let newSituation = randomSituation()
 
 app.ws('/', (ws, req) => {
     console.log('Connected')
@@ -40,20 +42,18 @@ const connectionHandler = (ws, msg) => {
         }
     }
 
-    // Добавляем нового игрока или обновляем существующего
-    commonState[msg.id].users[msg.username] = msg.gamestate[msg.username] || {
+    commonState[msg.id].users[msg.username] = {
         selectedMeme: null,
         points: 0,
         isVoted: false,
         isWinner: false,
         situation: commonState[msg.id].currentSituation,
-        round: commonState[msg.id].currentRound
+        round: commonState[msg.id].currentRound,
+        ...msg.gamestate[msg.username]
     }
 
     broadcastUpdatedState(msg.id)
 }
-
-let commonState = {}
 
 const broadcastConnection = (ws, msg) => {
 
@@ -83,7 +83,7 @@ const handleSelectMeme = (msg) => {
             isVoted: false,
             isWinner: false,
             round: 1, //need to change
-            situation: 'currentSituation' //need to change
+            situation: newSituation //need to change
         }
     }
     broadcastUpdatedState(msg)
@@ -140,16 +140,15 @@ const allPlayersVoted = (sessionId) => {
 }
 
 const startNewRound = (sessionId) => {
-    const newSituation = randomSituation();
-    commonState[sessionId].currentSituation = newSituation;
-    commonState[sessionId].currentRound += 1;
+    commonState[sessionId].currentSituation = newSituation
+    commonState[sessionId].currentRound += 1
 
     Object.keys(commonState[sessionId].users).forEach(username => {
-        commonState[sessionId].users[username].isVoted = false;
-        commonState[sessionId].users[username].selectedMeme = null;
-        commonState[sessionId].users[username].situation = newSituation;
-        commonState[sessionId].users[username].round = commonState[sessionId].currentRound;
-    });
+        commonState[sessionId].users[username].isVoted = false
+        commonState[sessionId].users[username].selectedMeme = null
+        commonState[sessionId].users[username].situation = newSituation
+        commonState[sessionId].users[username].round = commonState[sessionId].currentRound
+    })
 
-    broadcastUpdatedState(sessionId);
+    broadcastUpdatedState(sessionId)
 }

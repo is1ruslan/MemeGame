@@ -87,6 +87,7 @@ export default function GameField ({ situations, setsituations }) {
                     username: username,
                     gamestate: gameState
                 }))
+                console.log(gameState)
             }
         }
 
@@ -208,20 +209,25 @@ export default function GameField ({ situations, setsituations }) {
     //     </div>  
     // }
 
-    let players = Object.keys(gameState).map((playerName) => {
-        const playerData = gameState[playerName]
-        return (
-            <div key={playerName} className="player">
-                <h3>{playerName}</h3>
-                <h5>{playerData.points}</h5>
-                {playerData.selectedMeme ?
-                    <img className='rounded mymemes selectedMeme' src={playerData.selectedMeme} alt='Selected meme' onClick={() => voteForMeme(playerName)}/>
-                :
-                null
-                }
-            </div>
-        )
-    })
+    if (gameState?.users) {
+        var players = Object.keys(gameState).map((playerName) => {
+            if (playerName != 'users' && playerName != 'currentSituation' && playerName != 'currentRound') {
+                const playerData = gameState[playerName]
+                return (
+                    <div key={playerName} className="player">
+                        <h3>{playerName}</h3>
+                        <h5>{playerData.points}</h5>
+                        {playerData.selectedMeme ?
+                            <img className='rounded mymemes selectedMeme' src={gameState[playerName].selectedMeme} alt='Selected meme' onClick={() => voteForMeme(playerName)}/>
+                        :
+                        null
+                        }
+                    </div>
+                )
+            }
+            
+        })
+    }
 
     
 
