@@ -4,7 +4,6 @@ import MyMemes from './MyMemes'
 import Start from './Start'
 import GameField from './GameField'
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom'
-const socket = new WebSocket('ws://localhost:5000/')
 
 export default function App () {
     const [gameStarted, setGameStarted] = useState(false)

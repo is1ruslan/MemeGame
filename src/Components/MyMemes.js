@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-export default function MyMemes ({ myMemes, setMyMemes, selectedMeme, setSelectedMeme }) {
+export default function MyMemes ({ myMemes, setMyMemes, selectMeme, selectedMeme, setSelectedMeme }) {
     const [unUsedMemes, setUnUsedMemes] = useState()
 
     useEffect(() => {
@@ -50,7 +50,7 @@ export default function MyMemes ({ myMemes, setMyMemes, selectedMeme, setSelecte
 
     let Memes = myMemes.map((meme, ind) => (
         <li key={ind}>
-            {<img className='rounded mymemes' src={meme} onClick={() => changeMeme(ind)} alt='Random meme'/>}
+            {<img className='rounded mymemes' src={meme} onClick={() => selectMeme(meme)} alt='Random meme'/>}
         </li>
     ))
 

@@ -16,9 +16,26 @@ li {
   list-style-type: none;    
 }
 
+.round {
+  display: flex;
+  justify-content: center;
+}
+
 .mymemes {
   min-width: 70px;
   min-height: 120px;
   max-width: 300px;
   max-height: 450px;
+}
+
+.players {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
