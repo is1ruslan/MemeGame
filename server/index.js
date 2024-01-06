@@ -4,12 +4,13 @@ const WSServer = require('express-ws')(app)
 const aWss = WSServer.getWss()
 const PORT = process.env.PORT || 5000
 const situationsList = require('./situationsList')
+
 let commonState = {}
 let newSituation = randomSituation()
 
+
 app.ws('/', (ws, req) => {
     console.log('Connected')
-    //ws.send('You are connected')
 
     ws.on('message', (msg) => {
         msg = JSON.parse(msg)
@@ -32,6 +33,8 @@ app.ws('/', (ws, req) => {
 
 app.listen(PORT, () => console.log(`Port started on Port ${PORT}`))
 
+
+// New user connection
 const connectionHandler = (ws, msg) => {
     ws.id = msg.id
     if (!commonState[msg.id]) {
@@ -56,23 +59,19 @@ const connectionHandler = (ws, msg) => {
     broadcastUpdatedState(msg.id)
 }
 
-const broadcastConnection = (ws, msg) => {
 
-    if (!commonState[msg.id]) {
-        commonState[msg.id] = {};
-    }
-
+// State update for all users
+const broadcastUpdatedState = (msg) => {
     aWss.clients.forEach(client => {
         if (client.id === msg.id) {
-            commonState[msg.id][msg.username] = msg.gamestate[msg.username]
+            client.send(JSON.stringify(commonState[msg.id]))
         }
-        client.send(JSON.stringify(commonState[msg.id]))
     })
-
-    console.log(`The new commonState: ${JSON.stringify(commonState)}`)
+    console.log(`new commonState: ${JSON.stringify(commonState)}`)
 }
 
-// Обработка выбора мема
+
+// Meme select handler
 const handleSelectMeme = (msg) => {
     if (commonState[msg.id] && commonState[msg.id][msg.username]) {
         commonState[msg.id][msg.username].selectedMeme = msg.selectedMeme
@@ -83,39 +82,15 @@ const handleSelectMeme = (msg) => {
             points: 0,
             isVoted: false,
             isWinner: false,
-            round: 1, //need to change
-            situation: newSituation //need to change
+            round: commonState[msg.id].currentRound,
+            situation: newSituation
         }
     }
     broadcastUpdatedState(msg)
 }
 
-const broadcastUpdatedState = (msg) => {
-    aWss.clients.forEach(client => {
-        if (client.id === msg.id) {
-            client.send(JSON.stringify(commonState[msg.id]))
-        }
-    })
-    console.log(`new commonState: ${JSON.stringify(commonState)}`)
-}
 
-// Обработка голоса за мем
-
-// const handleVote = (msg) => {
-//     if (commonState[msg.id].users[msg.voteFor]) {
-//         commonState[msg.id].users[msg.voteFor].points += 1
-//     }
-//     commonState[msg.id].users[msg.voter].isVoted = true
-
-//     // Проверка, проголосовали ли все игроки
-//     if (allPlayersVoted(msg.id)) {
-//         startNewRound(msg.id)
-//         broadcastUpdatedState(msg.id)
-//     } else {
-//         broadcastUpdatedState(msg.id)
-//     }
-// }
-
+// Vote for memes
 const handleVote = (msg) => {
     const sessionData = commonState[msg.id]
     if (!sessionData) {
@@ -127,12 +102,11 @@ const handleVote = (msg) => {
         sessionData.voters.push(msg.voter)
     }
 
-    // Увеличиваем очки пользователя, за которого проголосовали
+    // Increase the points of the user voted for
     if (sessionData.users[msg.voteFor]) {
         sessionData.users[msg.voteFor].points += 1
     }
 
-    // Проверка, проголосовали ли все игроки
     if (sessionData.voters.length === Object.keys(sessionData.users).length) {
         startNewRound(msg.id)
     } else {
@@ -140,51 +114,15 @@ const handleVote = (msg) => {
     }
 }
 
-// Рандомная ситуация из списка
+
+// New random situation from list
 function randomSituation() {
     const random = Math.floor(Math.random() * situationsList.length)
     return situationsList[random]
 }
 
-const getSituation = (msg) => {
-    const currentSituation = randomSituation()
 
-    aWss.clients.forEach(client => {
-        if (client.id === msg.id) {
-            client.send(JSON.stringify({
-                method: 'getSituation',
-                situation: currentSituation
-            }))
-        }
-    })
-
-    console.log(`Situation sent: ${currentSituation}`)
-}
-
-// Начало нового раунда
-const allPlayersVoted = (sessionId) => {
-    return Object.values(commonState[sessionId]).every(player => player.isVoted)
-}
-
-// const startNewRound = (sessionId) => {
-//     const newSituation = randomSituation()
-//     commonState[sessionId].currentSituation = newSituation
-//     commonState[sessionId].currentRound += 1
-
-//     Object.keys(commonState[sessionId].users).forEach(username => {
-//         commonState[sessionId].users[username] = {
-//             ...commonState[sessionId].users[username],
-//             isVoted: false,
-//             selectedMeme: null,
-//             round: commonState[sessionId].currentRound,
-//             situation: newSituation
-//         }
-//     })
-
-//     broadcastUpdatedState(sessionId)
-//     console.log('new round is started')
-// }
-
+// Start new round
 const startNewRound = (sessionId) => {
     const newSituation = randomSituation()
     const sessionData = commonState[sessionId]
@@ -192,11 +130,22 @@ const startNewRound = (sessionId) => {
     sessionData.currentRound += 1
     sessionData.voters = []
 
-    Object.keys(sessionData.users).forEach(username => {
-        sessionData.users[username].isVoted = false
-        sessionData.users[username].selectedMeme = null
-        sessionData.users[username].round = sessionData.currentRound
-        sessionData.users[username].situation = newSituation
+    // Object.keys(sessionData.users).forEach(username => {
+    //     sessionData.users[username].isVoted = false
+    //     sessionData.users[username].selectedMeme = null
+    //     sessionData.users[username].round = sessionData.currentRound
+    //     sessionData.users[username].situation = newSituation
+    // })
+
+    
+    Object.keys(commonState[sessionId].users).forEach(username => {
+        sessionData.users[username] = {
+            ...sessionData.users[username],
+            isVoted: false,
+            selectedMeme: null,
+            round: sessionData.currentRound,
+            situation: newSituation
+        }
     })
 
     broadcastUpdatedState(sessionId)

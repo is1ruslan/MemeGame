@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import MyMemes from './MyMemes'
-import Situations from './Situations'
 
-export default function GameField ({ situations, setsituations }) {
+export default function GameField () {
     const usernameRef = useRef(null)
     const params = useParams()
     const [socket, setSocket] = useState(null)
@@ -15,41 +14,12 @@ export default function GameField ({ situations, setsituations }) {
     const [round, setRound] = useState(1)
     const [winner, setWinner] = useState(false)
     const [voted, setVoted] = useState(false)
-    //const [selectedMeme, setSelectedMeme] = useState(null);
     const [votes, setVotes] = useState({})
     const [currentSituation, setCurrentSituation] = useState('')
 
 
-    // New user connection
-    // useEffect(() => { 
-    //     const socket = new WebSocket('ws://localhost:5000/')
-        
-    //     socket.onopen = () => {
-    //         if (username) {
-    //             setGameState(prevState => {
-    //                 const updatedState = addUser(prevState, username)
-    //                 socket.send(JSON.stringify({
-    //                     method: 'New connection',
-    //                     id: params.id,
-    //                     username: username,
-    //                     gamestate: updatedState
-    //                 }))
-    //                 return updatedState
-    //             })
-    //         }
-    //     }
-        
-    //     // socket.onmessage = (event) => {
-    //     //     setGameState(JSON.parse(event.data) || {})
-    //     //     console.log('New user connected:', event.data)
-    //     // }
-    // }, [username])
-
-
     // Update game state for all players
     useEffect(() => {
-        //setGameState(prevState => updateMemes(prevState))
-
         if (socket && socket.readyState === WebSocket.OPEN) {
             if (Object.keys(gameState).length > 0 && username) { 
                 socket.send(JSON.stringify({
@@ -59,24 +29,11 @@ export default function GameField ({ situations, setsituations }) {
                     gamestate: gameState,
             }))
         }}
-        
-        console.log(gameState)
-            // socket.onmessage = (event) => {
-            //     const data = JSON.parse(event)
-            //     if (event) {
-            //         setGameState(data.params.id)
-            //         console.log('data recieved')
-            //     } else if (data.method === 'updateVotes') {
-            //         setVotes(data.votes)
-            //     }
-            //     console.log('You have a message: ', event)
-            // }
-            // console.log(gameState)
-        //}
     }, [myMemes, winner, voted, votes])
 
+
     useEffect(() => {
-        const newSocket = new WebSocket('ws://localhost:5000/')
+        const newSocket = new WebSocket('ws://localhost:5000')
 
         newSocket.onopen = () => {
             console.log('WebSocket connection established')
@@ -101,9 +58,6 @@ export default function GameField ({ situations, setsituations }) {
             } else if (data) {
                 console.log(data)
                 setGameState(data)
-                // if (data[username] && data[username].selectedMeme) {
-                //     setSelectedMeme(data[username].selectedMeme)
-                // }
             }
 
             console.log('You have a message: ', event.data)
@@ -127,20 +81,6 @@ export default function GameField ({ situations, setsituations }) {
     const connectHandler = () => {
         setUsername(usernameRef.current.value)
         setModal(false)
-    }
-
-    const addUser = (prevState, userName) => {
-        return {
-            ...prevState,
-            [userName]: {
-                points: 0,
-                isVoted: voted,
-                selectedMeme: null,
-                isWinner: winner,
-                round: round,
-                situation: currentSituation,
-            }
-        }
     }
 
 
@@ -186,7 +126,6 @@ export default function GameField ({ situations, setsituations }) {
     
         setGameState(newGameState)
         setRound(prev => prev + 1)
-        //setSelectedMeme(null)
         setVotes({})
     }
 
@@ -204,12 +143,6 @@ export default function GameField ({ situations, setsituations }) {
         } 
     }
 
-    // const Meme = ({ onVote, isVotable }) => {
-    //     <div onClick={isVotable ? onVote : null} style={{ cursor: isVotable ? 'pointer' : 'default' }}>
-    //         <img src={selectedMeme} alt="Meme" />
-    //     </div>  
-    // }
-
     let styles = ['orange', 'red', 'blue', 'purple', 'pink', 'green', 'yellow', ]
     if (gameState?.users) {
         var players = Object.keys(gameState.users).map((playerName) => {
@@ -220,11 +153,9 @@ export default function GameField ({ situations, setsituations }) {
                     <div key={playerName} className='player'>
                         <h5 style={{color: playerStyle}}>{playerName}</h5>
                         <h6 style={{color: playerStyle}}>{playerData.points}</h6>
-                        {playerData.selectedMeme ?
-                            <img className='rounded mymemes selectedMeme' src={playerData.selectedMeme} alt='Selected meme' onClick={() => voteForMeme(playerName)}/>
-                        :
-                        null
-                        }
+                        <button onClick={() => voteForMeme(playerName)}>
+                            <img className='rounded mymemes selectedMeme' src={playerData.selectedMeme} alt='Selected meme' />
+                        </button>
                     </div>
                 )
             }
@@ -236,10 +167,12 @@ export default function GameField ({ situations, setsituations }) {
 
     return (
         <div className="game">
-            <img className='logo' src='https://i.pinimg.com/originals/4b/52/17/4b5217cc5d784890f44aeb01a5ad7db6.png' alt='logo' />
             {/* <button className='btn btn-primary' onClick={() => getPoint()}>+Point</button> */}
-            
-            <h1 className='game-name'>Why are you mem?</h1>
+            <div className='name-info'>
+                <img className='logo' src='https://i.pinimg.com/originals/4b/52/17/4b5217cc5d784890f44aeb01a5ad7db6.png' alt='logo' />
+                <h1 className='game-name'>Why are you mem?</h1>
+            </div>
+
             <h2 className='round'>Round: {gameState.currentRound}</h2>
 
             <Modal centered show={modal} onHide={() => {}} >
@@ -262,13 +195,11 @@ export default function GameField ({ situations, setsituations }) {
                     <div className='card-body d-flex align-items-center text-center'>
                         <p className='card-text'>
                             {gameState.currentSituation}
-                            {/* {Object.values(gameState.users)[0]?.situation} */}
                         </p>
                     </div>
                 </div>
             </div>
-            {/* <Situations currentSituation={currentSituation} setCurrentSituation={setCurrentSituation} /> */}
-            <MyMemes myMemes={myMemes} setMyMemes={setMyMemes} selectMeme={selectMeme} />
+            <MyMemes myMemes={myMemes} setMyMemes={setMyMemes} selectMeme={selectMeme} gameState={gameState} username={username}/>
         </div>
     )
 }
