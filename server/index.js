@@ -18,9 +18,6 @@ app.ws('/', (ws, req) => {
             case 'New connection':
                 connectionHandler(ws, msg)
                 break 
-            case 'stateUpdate':
-                connectionHandler(ws, msg)
-                break
             case 'selectMeme':
                 handleSelectMeme(msg)
                 break
@@ -51,7 +48,6 @@ const connectionHandler = (ws, msg) => {
         points: 0,
         isVoted: false,
         isWinner: false,
-        situation: commonState[msg.id].currentSituation,
         round: commonState[msg.id].currentRound,
         ...msg.gamestate[msg.username]
     }
@@ -67,7 +63,7 @@ const broadcastUpdatedState = (msg) => {
             client.send(JSON.stringify(commonState[msg.id]))
         }
     })
-    console.log(`new commonState: ${JSON.stringify(commonState)}`)
+    console.log(`new commonState: ${JSON.stringify(commonState[msg.id])}`)
 }
 
 
@@ -83,7 +79,6 @@ const handleSelectMeme = (msg) => {
             isVoted: false,
             isWinner: false,
             round: commonState[msg.id].currentRound,
-            situation: newSituation
         }
     }
     broadcastUpdatedState(msg)

@@ -51,8 +51,8 @@ li {
 }
 
 .situation {
-  width: 150px;
-  min-height: 200px;
+  width: 350px;
+  min-height: 150px;
   max-height: 250px;
 }
 

@@ -104,17 +104,9 @@ export default function GameField () {
                 voteFor: selectedUsername,
                 id: params.id
             }))
-            setVoted(true)
             console.log('New voter: ', username)
         }
     }
-
-    // socket.onmessage = (event) => {
-    //     const data = JSON.parse(event.data)
-    //     if (data.method === 'updateVotes') {
-    //         setVotes(data.votes)
-    //     }
-    // }
 
     const endRound = () => {
         const newGameState = { ...gameState }
@@ -143,7 +135,7 @@ export default function GameField () {
         } 
     }
 
-    let styles = ['orange', 'red', 'blue', 'purple', 'pink', 'green', 'yellow', ]
+    let styles = ['orange', 'red', 'blue', 'purple', 'pink', 'green', ]
     if (gameState?.users) {
         var players = Object.keys(gameState.users).map((playerName) => {
             if (playerName != 'users' && playerName != 'currentSituation' && playerName != 'currentRound') {
@@ -162,7 +154,6 @@ export default function GameField () {
             
         })
     }
-
     
 
     return (

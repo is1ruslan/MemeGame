@@ -22,12 +22,12 @@ export default function MyMemes ({ myMemes, setMyMemes, selectMeme }) {
     }
 
     const changeMeme = async (ind) => {
-        selectMeme(ind)
         const memes = unUsedMemes
         const rand = Math.round(Math.random() * memes.length)
-        const newMeme = myMemes.map((meme) => 
-            meme === ind ?
-                memes[rand].url
+        const newMeme = myMemes.map((meme, i) => 
+            i === ind ?
+                (selectMeme(meme),
+                memes[rand].url)
             : meme
         )
         setMyMemes(newMeme)
@@ -35,8 +35,8 @@ export default function MyMemes ({ myMemes, setMyMemes, selectMeme }) {
 
     let Memes = myMemes.map((meme, ind) => (
         <li key={ind}>
-            <button onClick={() => changeMeme(meme)}>
-                {<img className='rounded mymemes' src={meme} alt='Random meme'/>}
+            <button onClick={() => changeMeme(ind)}>
+                <img className='rounded mymemes' src={meme} alt='Random meme'/>
             </button>
         </li>
     ))
