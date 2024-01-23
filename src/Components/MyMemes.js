@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import selectedMemes2 from './memes/selected2'
 
 export default function MyMemes ({ myMemes, setMyMemes, selectMeme }) {
     const [unUsedMemes, setUnUsedMemes] = useState()
@@ -9,13 +10,15 @@ export default function MyMemes ({ myMemes, setMyMemes, selectMeme }) {
 
     async function startMemes() {
         let arr = []
-        const response = await fetch('https://api.imgflip.com/get_memes')
-        const data = await response.json()
-        const memes = data.data.memes
+        // const response = await fetch('https://api.imgflip.com/get_memes')
+        // const data = await response.json()
+        // const memes = data.data.memes
+        const memes = selectedMemes2
 
         for (let i = 0; i < 9; i++) {
             const rand = Math.round(Math.random() * memes.length)
-            arr[i] = memes[rand].url
+            //arr[i] = memes[rand].url
+            arr[i] = memes[rand]
         }
         setMyMemes(arr)
         setUnUsedMemes(memes)
@@ -27,7 +30,8 @@ export default function MyMemes ({ myMemes, setMyMemes, selectMeme }) {
         const newMeme = myMemes.map((meme, i) => 
             i === ind ?
                 (selectMeme(meme),
-                memes[rand].url)
+                // memes[rand].url,
+                memes[rand])
             : meme
         )
         setMyMemes(newMeme)
@@ -42,12 +46,10 @@ export default function MyMemes ({ myMemes, setMyMemes, selectMeme }) {
     ))
 
     return (
-        <div>
-            <div className="container">
-                <ul className='memes-list'>
-                    {Memes}
-                </ul>
-            </div>
+        <div className="container">
+            <ul className='memes-list'>
+                {Memes}
+            </ul>
         </div>
     )
 }

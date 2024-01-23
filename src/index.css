@@ -20,6 +20,23 @@ li {
   list-style-type: none;    
 }
 
+span {
+  font-style: italic;
+  color: gray;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .name-info {
   display: flex;
   flex-direction: row;
@@ -37,27 +54,21 @@ li {
   justify-content: center;
 }
 
-@media screen and (max-width: 600px) {
-  .mymemes {
-    width: 100px;
-    height: 100px;
-    max-width: 150px;
-    max-height: 150px;
-  }
-
-  .card-text {
-    font-size: 9px;
-  }
-}
-
 .situation {
   width: 350px;
   min-height: 150px;
   max-height: 250px;
+  padding: 10px;
 }
 
 .card-text {
-  font-size: 16px;
+  font-size: 18px;
+}
+
+.memes-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .mymemes {
@@ -65,11 +76,14 @@ li {
   min-height: 20px;
   max-width: 200px;
   max-height: 200px;
+  margin: 2px;
 }
 
 .players {
+  width: 90vw;
   display: flex;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 
 .player {
@@ -77,4 +91,33 @@ li {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 15px;
+}
+
+.selectedMeme {
+  min-width: 20px;
+  min-height: 20px;
+  max-width: 200px;
+  max-height: 200px;
+  margin: 5px;
+}
+
+@media screen and (max-width: 600px) {
+  .selectedMeme {
+    width: 25vw;
+    height: 25vw;
+    margin: 2px;
+  }
+
+  .mymemes {
+    max-width: 25vw;
+    max-height: 25vw;
+    width: 25vw;
+    height: 25vw;
+    margin: 0;
+  }
+
+  .card-text {
+    font-size: 18px;
+  }
 }

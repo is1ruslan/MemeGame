@@ -63,7 +63,7 @@ const broadcastUpdatedState = (msg) => {
             client.send(JSON.stringify(commonState[msg.id]))
         }
     })
-    console.log(`new commonState: ${JSON.stringify(commonState[msg.id])}`)
+    console.log(`new commonState: ${JSON.stringify(commonState)}`)
 }
 
 

@@ -10,6 +10,7 @@
 
 # production
 /build
+/memgame.zip
 
 # misc
 .DS_Store

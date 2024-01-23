@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import MyMemes from './MyMemes'
+import config from './config'
 
 export default function GameField () {
     const usernameRef = useRef(null)
@@ -33,7 +34,9 @@ export default function GameField () {
 
 
     useEffect(() => {
-        const newSocket = new WebSocket('ws://localhost:5000')
+        //const newSocket = new WebSocket('ws://localhost:5000')
+        //const newSocket = new WebSocket('ws://13.51.160.23:5000')
+        const newSocket = new WebSocket(config.websocketUrl)
 
         newSocket.onopen = () => {
             console.log('WebSocket connection established')
@@ -143,10 +146,10 @@ export default function GameField () {
                 let playerStyle = styles[Math.floor(Math.random() * styles.length)]
                 return (
                     <div key={playerName} className='player'>
-                        <h5 style={{color: playerStyle}}>{playerName}</h5>
-                        <h6 style={{color: playerStyle}}>{playerData.points}</h6>
+                        <h5 style={{color: 'black'}}>{playerName}</h5>
+                        <h6 style={{color: 'black'}}>{playerData.points}</h6>
                         <button onClick={() => voteForMeme(playerName)}>
-                            <img className='rounded mymemes selectedMeme' src={playerData.selectedMeme} alt='Selected meme' />
+                            <img className='rounded selectedMeme' src={playerData.selectedMeme} alt='Selected meme' />
                         </button>
                     </div>
                 )
@@ -161,7 +164,7 @@ export default function GameField () {
             {/* <button className='btn btn-primary' onClick={() => getPoint()}>+Point</button> */}
             <div className='name-info'>
                 <img className='logo' src='https://i.pinimg.com/originals/4b/52/17/4b5217cc5d784890f44aeb01a5ad7db6.png' alt='logo' />
-                <h1 className='game-name'>Why are you mem?</h1>
+                <h1 className='game-name'>Why are you mem?<span> Beta</span></h1>
             </div>
 
             <h2 className='round'>Round: {gameState.currentRound}</h2>
