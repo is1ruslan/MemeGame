@@ -11,6 +11,7 @@
 # production
 /build
 /memgame.zip
+/memgame
 
 # misc
 .DS_Store

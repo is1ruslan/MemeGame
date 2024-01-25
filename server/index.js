@@ -6,7 +6,6 @@ const PORT = process.env.PORT || 5000
 const situationsList = require('./situationsList')
 
 let commonState = {}
-let newSituation = randomSituation()
 
 
 app.ws('/', (ws, req) => {
@@ -39,7 +38,7 @@ const connectionHandler = (ws, msg) => {
             users: {},
             currentSituation: randomSituation(),
             currentRound: 1,
-            voters: []
+            votes: []
         }
     }
 
@@ -52,7 +51,7 @@ const connectionHandler = (ws, msg) => {
         ...msg.gamestate[msg.username]
     }
 
-    broadcastUpdatedState(msg.id)
+    broadcastUpdatedState(msg)
 }
 
 
@@ -75,7 +74,7 @@ const handleSelectMeme = (msg) => {
     } else {
         commonState[msg.id].users[msg.username] = {
             selectedMeme: msg.selectedMeme,
-            points: 0,
+            points: commonState[msg.id].users[msg.username].points,
             isVoted: false,
             isWinner: false,
             round: commonState[msg.id].currentRound,
@@ -93,19 +92,17 @@ const handleVote = (msg) => {
         return
     }
 
-    if (!sessionData.voters.includes(msg.voter)) {
-        sessionData.voters.push(msg.voter)
+    if (!sessionData.votes.includes(msg.voter)) {
+        sessionData.votes.push(msg.voter)
+        if (sessionData.users[msg.voteFor]) {
+            sessionData.users[msg.voteFor].points += 1
+        }
     }
 
-    // Increase the points of the user voted for
-    if (sessionData.users[msg.voteFor]) {
-        sessionData.users[msg.voteFor].points += 1
-    }
-
-    if (sessionData.voters.length === Object.keys(sessionData.users).length) {
-        startNewRound(msg.id)
+    if (sessionData.votes.length === Object.keys(sessionData.users).length) {
+        startNewRound(msg)
     } else {
-        broadcastUpdatedState(msg.id)
+        broadcastUpdatedState(msg)
     }
 }
 
@@ -118,31 +115,23 @@ function randomSituation() {
 
 
 // Start new round
-const startNewRound = (sessionId) => {
+const startNewRound = (msg) => {
     const newSituation = randomSituation()
-    const sessionData = commonState[sessionId]
+    const sessionData = commonState[msg.id]
     sessionData.currentSituation = newSituation
     sessionData.currentRound += 1
-    sessionData.voters = []
-
-    // Object.keys(sessionData.users).forEach(username => {
-    //     sessionData.users[username].isVoted = false
-    //     sessionData.users[username].selectedMeme = null
-    //     sessionData.users[username].round = sessionData.currentRound
-    //     sessionData.users[username].situation = newSituation
-    // })
-
-    
-    Object.keys(commonState[sessionId].users).forEach(username => {
+    sessionData.votes = []
+  
+    Object.keys(commonState[msg.id].users).forEach(username => {
         sessionData.users[username] = {
             ...sessionData.users[username],
             isVoted: false,
             selectedMeme: null,
             round: sessionData.currentRound,
-            situation: newSituation
+            currentSituation: newSituation
         }
     })
 
-    broadcastUpdatedState(sessionId)
+    broadcastUpdatedState(msg)
     console.log('new round is started')
 }

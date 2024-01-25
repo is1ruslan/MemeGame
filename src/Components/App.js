@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import Situations from './Situations'
-import MyMemes from './MyMemes'
+import React, { useState } from 'react'
 import Start from './Start'
 import GameField from './GameField'
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom'

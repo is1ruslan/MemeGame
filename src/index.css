@@ -68,7 +68,8 @@ button {
 .memes-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
 }
 
 .mymemes {
@@ -110,11 +111,12 @@ button {
   }
 
   .mymemes {
-    max-width: 25vw;
-    max-height: 25vw;
-    width: 25vw;
-    height: 25vw;
-    margin: 0;
+    /* max-width: 25vw;
+    max-height: 25vw; */
+    width: 28vw;
+    height: 28vw;
+    margin-top: 5px;
+    margin-left: -25px;
   }
 
   .card-text {

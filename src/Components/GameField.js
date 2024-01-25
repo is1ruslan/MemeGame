@@ -15,7 +15,7 @@ export default function GameField () {
     const [round, setRound] = useState(1)
     const [winner, setWinner] = useState(false)
     const [voted, setVoted] = useState(false)
-    const [votes, setVotes] = useState({})
+    const [votes, setVotes] = useState([])
     const [currentSituation, setCurrentSituation] = useState('')
 
 
@@ -30,7 +30,7 @@ export default function GameField () {
                     gamestate: gameState,
             }))
         }}
-    }, [myMemes, winner, voted, votes])
+    }, [myMemes, winner, voted, votes, gameState, username])
 
 
     useEffect(() => {
@@ -47,7 +47,6 @@ export default function GameField () {
                     username: username,
                     gamestate: gameState
                 }))
-                console.log(gameState)
             }
         }
 
@@ -55,11 +54,11 @@ export default function GameField () {
             const data = JSON.parse(event.data)
 
             if (data.method === 'getSituation') {
-                setCurrentSituation(data.situation)
+                setCurrentSituation(data.currentSituation)
             } else if (data.method === 'updateVotes') {
                 setVotes(data.votes)
             } else if (data) {
-                console.log(data)
+                console.log('Another data', data)
                 setGameState(data)
             }
 
@@ -77,19 +76,24 @@ export default function GameField () {
         setSocket(newSocket)
 
         return () => newSocket.close()
-    }, [username, params.id, round, votes])
+    }, [username, params.id, round, votes, voted])
 
 
     // For new users
     const connectHandler = () => {
-        setUsername(usernameRef.current.value)
-        setModal(false)
+        if (usernameRef.current.value) {
+            setUsername(usernameRef.current.value)
+            setModal(false)
+        } else {
+            setUsername(`Anon${Math.round(Math.random() * 1000)}`)
+            setModal(false)
+        }
     }
 
 
     // Update game State
     const selectMeme = (meme) => {
-        if (socket && socket.readyState === WebSocket.OPEN) {
+        if (socket && socket.readyState === WebSocket.OPEN && !gameState.users[username].selectedMeme) {
             socket.send(JSON.stringify({
                 method: 'selectMeme',
                 username: username,
@@ -111,34 +115,8 @@ export default function GameField () {
         }
     }
 
-    const endRound = () => {
-        const newGameState = { ...gameState }
-        Object.keys(votes).forEach(username => {
-            if (newGameState[username]) {
-                newGameState[username].points += votes[username]
-            }
-        })
-    
-        setGameState(newGameState)
-        setRound(prev => prev + 1)
-        setVotes({})
-    }
 
-    const getPoint = () => {
-        if (username) {
-            setGameState((prevState) => {
-                return {
-                    ...prevState,
-                    [username]: {
-                        ...prevState[username],
-                        points: prevState[username].points + 1
-                    }
-                }
-            })
-        } 
-    }
-
-    let styles = ['orange', 'red', 'blue', 'purple', 'pink', 'green', ]
+    const styles = ['orange', 'red', 'blue', 'purple', 'pink', 'green', ]
     if (gameState?.users) {
         var players = Object.keys(gameState.users).map((playerName) => {
             if (playerName != 'users' && playerName != 'currentSituation' && playerName != 'currentRound') {
@@ -149,7 +127,7 @@ export default function GameField () {
                         <h5 style={{color: 'black'}}>{playerName}</h5>
                         <h6 style={{color: 'black'}}>{playerData.points}</h6>
                         <button onClick={() => voteForMeme(playerName)}>
-                            <img className='rounded selectedMeme' src={playerData.selectedMeme} alt='Selected meme' />
+                            <img className='rounded selectedMeme' src={playerData.selectedMeme} />
                         </button>
                     </div>
                 )
@@ -161,7 +139,6 @@ export default function GameField () {
 
     return (
         <div className="game">
-            {/* <button className='btn btn-primary' onClick={() => getPoint()}>+Point</button> */}
             <div className='name-info'>
                 <img className='logo' src='https://i.pinimg.com/originals/4b/52/17/4b5217cc5d784890f44aeb01a5ad7db6.png' alt='logo' />
                 <h1 className='game-name'>Why are you mem?<span> Beta</span></h1>
@@ -174,7 +151,7 @@ export default function GameField () {
                     <Modal.Title>Пиши ник давай</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <input type="text" ref={usernameRef}/>
+                    <input type="text" ref={usernameRef} required />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="warning" onClick={() => connectHandler()}>
