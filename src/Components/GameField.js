@@ -12,11 +12,7 @@ export default function GameField () {
     const [gameState, setGameState] = useState({})
     const [modal, setModal] = useState(true)
     const [username, setUsername] = useState('')
-    const [round, setRound] = useState(1)
     const [winner, setWinner] = useState(false)
-    const [voted, setVoted] = useState(false)
-    const [votes, setVotes] = useState([])
-    const [currentSituation, setCurrentSituation] = useState('')
 
 
     // Update game state for all players
@@ -30,12 +26,10 @@ export default function GameField () {
                     gamestate: gameState,
             }))
         }}
-    }, [myMemes, winner, voted, votes, gameState, username])
+    }, [myMemes, winner, gameState, username, params.id, socket])
 
 
     useEffect(() => {
-        //const newSocket = new WebSocket('ws://localhost:5000')
-        //const newSocket = new WebSocket('ws://13.51.160.23:5000')
         const newSocket = new WebSocket(config.websocketUrl)
 
         newSocket.onopen = () => {
@@ -52,13 +46,8 @@ export default function GameField () {
 
         newSocket.onmessage = (event) => {
             const data = JSON.parse(event.data)
-
-            if (data.method === 'getSituation') {
-                setCurrentSituation(data.currentSituation)
-            } else if (data.method === 'updateVotes') {
-                setVotes(data.votes)
-            } else if (data) {
-                console.log('Another data', data)
+ 
+            if (data) {
                 setGameState(data)
             }
 
@@ -76,7 +65,7 @@ export default function GameField () {
         setSocket(newSocket)
 
         return () => newSocket.close()
-    }, [username, params.id, round, votes, voted])
+    }, [username, params.id])
 
 
     // For new users
@@ -104,7 +93,7 @@ export default function GameField () {
     }
 
     const voteForMeme = (selectedUsername) => {
-        if (socket && socket.readyState === WebSocket.OPEN && selectedUsername !== username && !voted) {
+        if (socket && socket.readyState === WebSocket.OPEN && selectedUsername !== username) {
             socket.send(JSON.stringify({
                 method: 'vote',
                 voter: username,
@@ -119,7 +108,7 @@ export default function GameField () {
     const styles = ['orange', 'red', 'blue', 'purple', 'pink', 'green', ]
     if (gameState?.users) {
         var players = Object.keys(gameState.users).map((playerName) => {
-            if (playerName != 'users' && playerName != 'currentSituation' && playerName != 'currentRound') {
+            if (playerName !== 'users' && playerName !== 'currentSituation' && playerName !== 'currentRound') {
                 const playerData = gameState.users[playerName]
                 let playerStyle = styles[Math.floor(Math.random() * styles.length)]
                 return (
@@ -131,8 +120,9 @@ export default function GameField () {
                         </button>
                     </div>
                 )
-            }
-            
+            } else {
+                return null
+            }   
         })
     }
     
