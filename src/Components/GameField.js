@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import MyMemes from './MyMemes'
+import Players from './Players'
+import Rules from './Rules'
 import config from './config'
 
 export default function GameField () {
@@ -26,7 +28,7 @@ export default function GameField () {
                     gamestate: gameState,
             }))
         }}
-    }, [myMemes, winner, gameState, username, params.id, socket])
+    }, [winner, gameState, username, params.id, socket])
 
 
     useEffect(() => {
@@ -129,28 +131,28 @@ export default function GameField () {
 
     return (
         <div className="game">
-            <div className='name-info'>
+            <Rules />
+            <div className='game-info'>
                 <img className='logo' src='https://i.pinimg.com/originals/4b/52/17/4b5217cc5d784890f44aeb01a5ad7db6.png' alt='logo' />
                 <h1 className='game-name'>Why are you mem?<span> Beta</span></h1>
             </div>
 
             <h2 className='round'>Round: {gameState.currentRound}</h2>
 
-            <Modal centered show={modal} onHide={() => {}} >
-                <Modal.Header >
-                    <Modal.Title>Пиши ник давай</Modal.Title>
+            <Modal className='modal' centered show={modal} onHide={() => connectHandler()} >
+                <Modal.Header className='centered-modal'>
+                    <Modal.Title>Пиши ник сюда</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <input type="text" ref={usernameRef} required />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="warning" onClick={() => connectHandler()}>
+                <Modal.Body className='centered-modal'>
+                    <input className='modal-input' type="text" ref={usernameRef} />
+                    <Button className='modal-button' variant="warning" onClick={() => connectHandler()}>
                         Войти
                     </Button>
-                </Modal.Footer>
+                </Modal.Body>
             </Modal>
 
-            <div className="players">{players}</div>
+            <Players gameState={gameState} voteForMeme={voteForMeme}/>
+            {/* <div className="players">{players}</div> */}
             <div className='mx-auto d-flex align-items-center justify-content-center'>
                 <div className='situation card text-black bg-warning m-3' >
                     <div className='card-body d-flex align-items-center text-center'>
@@ -160,7 +162,11 @@ export default function GameField () {
                     </div>
                 </div>
             </div>
-            <MyMemes myMemes={myMemes} setMyMemes={setMyMemes} selectMeme={selectMeme} gameState={gameState} username={username}/>
+            <MyMemes myMemes={myMemes} setMyMemes={setMyMemes} selectMeme={selectMeme} />
+
+            {/* <button className='btn btn-warning' onClick={() => {}}>
+                Stop Game
+            </button> */}
         </div>
     )
 }

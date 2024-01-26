@@ -1,5 +1,9 @@
+* {
+  color: white;
+}
+
 body {
-  background-color: #f5e0dc;
+  background-color: black; /*#f5e0dc; */
   padding: 20px;
   font-family: 'Karla', sans-serif;
   font-weight: 700;
@@ -30,6 +34,25 @@ button {
   background-color: transparent;
 }
 
+.centered-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: black;
+  border-color: gray;
+}
+
+.modal-input {
+  font-size: 16px;
+  color: black;
+}
+
+.modal-button {
+  margin-top: 15px;
+}
+
+
 .game {
   display: flex;
   flex-direction: column;
@@ -37,11 +60,20 @@ button {
   align-items: center;
 }
 
-.name-info {
+.game-info {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+}
+
+.game-rules {
+  position: absolute;
+  margin-top: 15px;
+  left: 20%;
+  font-weight: lighter;
+  color: white;
+  transform: translateX(-100%);
 }
 
 .logo {
@@ -63,6 +95,7 @@ button {
 
 .card-text {
   font-size: 18px;
+  color: black;
 }
 
 .memes-list {
@@ -104,6 +137,14 @@ button {
 }
 
 @media screen and (max-width: 600px) {
+  .game-info {
+    margin-top: 20px;
+  }
+
+  .game-rules {
+    margin-top: -10px;
+  }
+
   .selectedMeme {
     width: 25vw;
     height: 25vw;
