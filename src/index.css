@@ -34,6 +34,10 @@ button {
   background-color: transparent;
 }
 
+.modal-open {
+  overflow: visible !important;
+}
+
 .centered-modal {
   display: flex;
   justify-content: center;
@@ -43,6 +47,13 @@ button {
   border-color: gray;
 }
 
+.winners {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .modal-input {
   font-size: 16px;
   color: black;
@@ -50,6 +61,25 @@ button {
 
 .modal-button {
   margin-top: 15px;
+}
+
+.link-block {
+  display: block;
+  width: 90%;
+  height: 100%;
+  /* border-radius: 10%; */
+  background-color: rgba(197, 197, 197, 0.5);
+}
+
+.room-link {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
 }
 
 
@@ -73,6 +103,7 @@ button {
   left: 20%;
   font-weight: lighter;
   color: white;
+  text-decoration: underline;
   transform: translateX(-100%);
 }
 

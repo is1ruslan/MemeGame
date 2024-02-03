@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import selectedMemes2 from './memes/selected2'
 
 export default function MyMemes ({ myMemes, setMyMemes, selectMeme }) {
-    const [unUsedMemes, setUnUsedMemes] = useState()
+    const [unusedMemes, setUnusedMemes] = useState()
 
     useEffect(() => {
         startMemes()
@@ -16,24 +16,29 @@ export default function MyMemes ({ myMemes, setMyMemes, selectMeme }) {
         const memes = selectedMemes2
 
         for (let i = 0; i < 9; i++) {
-            const rand = Math.round(Math.random() * memes.length)
-            //arr[i] = memes[rand].url
+            let rand = Math.floor(Math.random() * memes.length)
+                while (arr.includes(memes[rand])) {
+                    rand = Math.floor(Math.random() * memes.length)
+                }
             arr[i] = memes[rand]
         }
         setMyMemes(arr)
-        setUnUsedMemes(memes)
+        setUnusedMemes(memes)
     }
 
     const changeMeme = async (ind) => {
-        const memes = unUsedMemes
-        const rand = Math.round(Math.random() * memes.length)
-        const newMeme = myMemes.map((meme, i) => 
-            i === ind ?
-                (selectMeme(meme),
-                // memes[rand].url,
-                memes[rand])
-            : meme
-        )
+        const memes = unusedMemes
+        let rand = Math.floor(Math.random() * memes.length)
+
+        const newMeme = myMemes.map((meme, i) => {
+            if (i === ind) {
+                while (myMemes.includes(memes[rand])) {
+                    rand = Math.floor(Math.random() * memes.length)
+                }
+                selectMeme(meme)
+                return memes[rand]
+            } else return meme
+        })
         setMyMemes(newMeme)
     }
 

@@ -6,9 +6,9 @@ export default function Rules() {
 
     return (
         <div>
-            <a className='game-rules' onClick={() => setRules(true)} >Правила</a>
+            <h6 className='game-rules' onClick={() => setRules(true)} >Правила</h6>
 
-            <Modal centered show={rules} onHide={() => setRules(false)} >
+            <Modal className='modal' centered show={rules} onHide={() => setRules(false)} >
                 <Modal.Header className='centered-modal'>
                     <Modal.Title>Правила игры✅</Modal.Title>
                 </Modal.Header>

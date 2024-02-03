@@ -6,23 +6,31 @@ const PORT = process.env.PORT || 5000
 const situationsList = require('./situationsList')
 
 let commonState = {}
+let unusedSituations = {}
 
 
 app.ws('/', (ws, req) => {
     console.log('Connected')
 
     ws.on('message', (msg) => {
-        msg = JSON.parse(msg)
-        switch (msg.method) {
-            case 'New connection':
-                connectionHandler(ws, msg)
-                break 
-            case 'selectMeme':
-                handleSelectMeme(msg)
-                break
-            case 'vote':
-                handleVote(msg)
-                break
+        try {
+            msg = JSON.parse(msg)
+            switch (msg.method) {
+                case 'New connection':
+                    connectionHandler(ws, msg)
+                    break 
+                case 'selectMeme':
+                    handleSelectMeme(msg)
+                    break
+                case 'voteForMeme':
+                    handleVoteForMeme(msg)
+                    break
+                case 'voteForStopGame':
+                    handleVoteForStopGame(msg)
+                    break
+            }
+        } catch (error) {
+            console.error('Error with message processing', error)
         }
     })
 })
@@ -35,19 +43,17 @@ const connectionHandler = (ws, msg) => {
     ws.id = msg.id
     if (!commonState[msg.id]) {
         commonState[msg.id] = {
-            users: {},
-            currentSituation: randomSituation(),
+            currentSituation: randomSituation(msg),
             currentRound: 1,
-            votes: []
+            votes: [],
+            stopGameVotes: [],
+            users: {}
         }
     }
 
     commonState[msg.id].users[msg.username] = {
         selectedMeme: null,
         points: 0,
-        isVoted: false,
-        isWinner: false,
-        round: commonState[msg.id].currentRound,
         ...msg.gamestate[msg.username]
     }
 
@@ -62,22 +68,19 @@ const broadcastUpdatedState = (msg) => {
             client.send(JSON.stringify(commonState[msg.id]))
         }
     })
-    console.log(`new commonState: ${JSON.stringify(commonState)}`)
+    console.log(`new commonState: ${JSON.stringify(commonState)}${'\n'}`)
 }
 
 
 // Meme select handler
 const handleSelectMeme = (msg) => {
-    if (commonState[msg.id] && commonState[msg.id][msg.username]) {
-        commonState[msg.id][msg.username].selectedMeme = msg.selectedMeme
+    if (commonState[msg.id] && commonState[msg.id].users[msg.username]) {
+        commonState[msg.id].users[msg.username].selectedMeme = msg.selectedMeme
         console.log(`User ${msg.username} selected a meme: ${msg.selectedMeme}`)
     } else {
         commonState[msg.id].users[msg.username] = {
             selectedMeme: msg.selectedMeme,
             points: commonState[msg.id].users[msg.username].points,
-            isVoted: false,
-            isWinner: false,
-            round: commonState[msg.id].currentRound,
         }
     }
     broadcastUpdatedState(msg)
@@ -85,7 +88,7 @@ const handleSelectMeme = (msg) => {
 
 
 // Vote for memes
-const handleVote = (msg) => {
+const handleVoteForMeme = (msg) => {
     const sessionData = commonState[msg.id]
     if (!sessionData) {
         console.log("Session not found")
@@ -106,29 +109,47 @@ const handleVote = (msg) => {
     }
 }
 
+const handleVoteForStopGame = (msg) => {
+    const sessionData = commonState[msg.id]
+    const countUsers = Object.keys(sessionData.users).length
+
+    sessionData.stopGameVotes.push(msg.voter)
+
+    if (sessionData.stopGameVotes.length / countUsers >= 0.5) {
+        console.log('The game is stopped')
+    }
+
+    broadcastUpdatedState(msg)
+}
+
 
 // New random situation from list
-function randomSituation() {
-    const random = Math.floor(Math.random() * situationsList.length)
-    return situationsList[random]
+function randomSituation(msg) {
+    if (!unusedSituations[msg.id] || unusedSituations[msg.id].size === 0) {
+        unusedSituations[msg.id] = new Set(situationsList)
+    }
+
+    const situationsArray = Array.from(unusedSituations[msg.id])
+    const random = Math.floor(Math.random() * situationsArray.length)
+    const selectedSituation = situationsArray[random]
+    unusedSituations[msg.id].delete(selectedSituation)
+    
+    return selectedSituation
 }
 
 
 // Start new round
 const startNewRound = (msg) => {
-    const newSituation = randomSituation()
     const sessionData = commonState[msg.id]
-    sessionData.currentSituation = newSituation
+    sessionData.currentSituation = randomSituation(msg)
     sessionData.currentRound += 1
     sessionData.votes = []
+    sessionData.stopGameVotes = []
   
     Object.keys(commonState[msg.id].users).forEach(username => {
         sessionData.users[username] = {
             ...sessionData.users[username],
-            isVoted: false,
-            selectedMeme: null,
-            round: sessionData.currentRound,
-            currentSituation: newSituation
+            selectedMeme: null
         }
     })
 
