@@ -18,7 +18,7 @@ export default function GameField () {
     const [modal, setModal] = useState(true)
     const [username, setUsername] = useState('')
     const [isGameStopped, setIsGameStopped] = useState(false)
-    const [darkMode, setDarkMode] = useState(true)
+    const [darkMode, setDarkMode] = useState(false)
 
 
     // Update game state for all players
@@ -191,7 +191,7 @@ export default function GameField () {
 
             <div className='game-info'>
                 <img className='logo' src='https://i.pinimg.com/originals/4b/52/17/4b5217cc5d784890f44aeb01a5ad7db6.png' alt='logo' />
-                <h1 className='game-name'>Why are you mem?<span> Beta</span></h1>
+                <h1 className='game-name'>Memezis<span> Beta</span></h1>
             </div>
 
             <h2 className='round'>Раунд: {gameState.currentRound}</h2>
