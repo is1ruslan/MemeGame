@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 
-export default function Rules() {
+export default function Rules({ darkMode }) {
     const [rules, setRules] = useState(false)
 
     return (
         <div>
-            <h6 className='game-rules' onClick={() => setRules(true)} >Правила</h6>
+            <button onClick={() => setRules(true)}><h6 className='game-rules' >Правила</h6></button>
 
             <Modal className='modal' centered show={rules} onHide={() => setRules(false)} >
-                <Modal.Header className='centered-modal'>
+                <Modal.Header className={`centered-modal ${darkMode ? 'dark' : ''}`}>
                     <Modal.Title>Правила игры✅</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className='centered-modal modal'>
+                <Modal.Body className={`centered-modal ${darkMode ? 'dark' : ''}`}>
                     <h6><strong>Коротко ⏳<br /></strong>
                         Перед вами случайная ситуация, все игроки выбирают самый ржачный и подходящий к ней мем, затем голосуют за самый смешной мем из тех, что выбрали другие игроки. Побеждает автор самой смешной связки<br />
                         <br />
@@ -30,7 +30,7 @@ export default function Rules() {
                         <br />
                         Продолжайте играть, пока не устанете смеяться:) Игрок, набравший больше всех очков побеждает и становится мемологом вечера 😅</h6>
                 </Modal.Body>
-                <Modal.Footer className='centered-modal'>
+                <Modal.Footer className={`centered-modal ${darkMode ? 'dark' : ''}`}>
                     <Button className='modal-button' variant="warning" onClick={() => setRules(false)}>
                         Паняяятна
                     </Button>

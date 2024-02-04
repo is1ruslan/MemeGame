@@ -44,14 +44,14 @@ export default function MyMemes ({ myMemes, setMyMemes, selectMeme }) {
 
     let Memes = myMemes.map((meme, ind) => (
         <li key={ind}>
-            <button onClick={() => changeMeme(ind)}>
+            <button className='mem' onClick={() => changeMeme(ind)} >
                 <img className='rounded mymemes' src={meme} alt='Random meme'/>
             </button>
         </li>
     ))
 
     return (
-        <div className="container">
+        <div className="container-ms">
             <ul className='memes-list'>
                 {Memes}
             </ul>

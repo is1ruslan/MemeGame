@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
-import {ReactComponent as ShareIcon} from './icons/share-apple.svg';
+import {ReactComponent as ShareIcon} from './icons/share-apple.svg'
+import LightOff from './icons/light-off.png'
+import LightOn from './icons/light-on.png'
 import MyMemes from './MyMemes'
 import Players from './Players'
 import Rules from './Rules'
@@ -16,6 +18,7 @@ export default function GameField () {
     const [modal, setModal] = useState(true)
     const [username, setUsername] = useState('')
     const [isGameStopped, setIsGameStopped] = useState(false)
+    const [darkMode, setDarkMode] = useState(true)
 
 
     // Update game state for all players
@@ -113,7 +116,7 @@ export default function GameField () {
     
         newSocket.onerror = (error) => {
             console.error('WebSocket Error: ', error)
-            alert('WebSocket Error: ' + error)
+            // alert('WebSocket Error: ' + error)
         }
 
         setSocket(newSocket)
@@ -161,18 +164,18 @@ export default function GameField () {
     
 
     return (
-        <div className="game">
+        <div className={`game ${darkMode ? 'dark' : ''}`}>
             <Modal className='modal' centered show={modal} onHide={() => connectHandler()} >
-                <Modal.Header className='centered-modal'>
+                <Modal.Header className={`centered-modal ${darkMode ? 'dark' : ''}`}>
                     <Modal.Title>Пиши ник сюда</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className='centered-modal'>
+                <Modal.Body className={`centered-modal ${darkMode ? 'dark' : ''}`}>
                     <input className='modal-input' type="text" ref={usernameRef} />
                     <p className='link-p'>Ссылка на комнату</p>
                     <div className='link-block'>
                         <div className='room-link'>
                             <p>{'13.51.160.23/'+params.id}</p>
-                            <button className='icon copy-icon' onClick={share}><ShareIcon /></button>
+                            <button className='icon share-icon' onClick={share}><ShareIcon /></button>
                         </div>
                     </div>
                     <Button className='modal-button' variant="warning" onClick={() => connectHandler()}>
@@ -181,8 +184,11 @@ export default function GameField () {
                 </Modal.Body>
             </Modal>
 
+            <div className='header'>
+                <Rules darkMode={darkMode}/>
+                <button onClick={() => setDarkMode(!darkMode)}><img className='mode' src={darkMode ? LightOn : LightOff}/></button>
+            </div>
 
-            <Rules />
             <div className='game-info'>
                 <img className='logo' src='https://i.pinimg.com/originals/4b/52/17/4b5217cc5d784890f44aeb01a5ad7db6.png' alt='logo' />
                 <h1 className='game-name'>Why are you mem?<span> Beta</span></h1>
@@ -190,7 +196,7 @@ export default function GameField () {
 
             <h2 className='round'>Раунд: {gameState.currentRound}</h2>
 
-            <Players gameState={gameState} voteForMeme={voteForMeme} isGameStopped={isGameStopped}/>
+            <Players gameState={gameState} voteForMeme={voteForMeme} isGameStopped={isGameStopped} darkMode={darkMode}/>
             <div className='mx-auto d-flex align-items-center justify-content-center'>
                 <div className='situation card text-black bg-warning m-3' >
                     <div className='card-body d-flex align-items-center text-center'>

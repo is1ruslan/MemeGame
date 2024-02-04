@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Confetti from 'react-confetti'
 import { Modal, Button } from 'react-bootstrap'
 
-export default function Players ({ gameState, voteForMeme, isGameStopped }) {
+export default function Players ({ gameState, voteForMeme, isGameStopped, darkMode }) {
     const [playerStyles, setPlayerStyles] = useState({})
     const [winners, setWinners] = useState([])
     //const styles = ['orange', 'red', 'blue', 'purple', 'pink', 'green']
@@ -79,11 +79,11 @@ export default function Players ({ gameState, voteForMeme, isGameStopped }) {
             <>
                 <Confetti numberOfPieces={500} gravity={0.1} />
                 <Modal centered className='modal' show={true} onHide={() => {}} >
-                    <Modal.Header className='centered-modal'>
+                    <Modal.Header className={`centered-modal ${darkMode ? 'dark' : ''}`}>
                         <Modal.Title>И перед нами победитель🎉</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body className='centered-modal modal'>
-                        <ul className='centered-modal'>{showWinners}</ul>
+                    <Modal.Body className={`centered-modal ${darkMode ? 'dark' : ''}`}>
+                        <ul className='winners'>{showWinners}</ul>
                         <Button className='modal-button' variant="warning" onClick={() => {}}>
                             Начать новую игру
                         </Button>
