@@ -20,6 +20,7 @@ export default function GameField () {
     const [username, setUsername] = useState('')
     const [isGameStopped, setIsGameStopped] = useState(false)
     const [darkMode, setDarkMode] = useState(false)
+    let countUsers = 0
 
 
     // Update game state for all players
@@ -62,12 +63,12 @@ export default function GameField () {
         } else if (navigator.clipboard) {
             try {
                 await navigator.clipboard.writeText(url)
-                console.log('Link has copied')
+                alert('Link has copied')
             } catch (error) {
-                console.error('Copy error: ', error)
+                alert('Copy error: ', error)
             }
         } else {
-            console.log('Автоматическое копирование недоступно. Пожалуйста, скопируйте ссылку вручную.')
+            alert('Автоматическое копирование недоступно. Пожалуйста, скопируйте ссылку вручную.')
         }
     } 
 
@@ -159,7 +160,11 @@ export default function GameField () {
         }
     }
 
-    if (gameState?.users && gameState.stopGameVotes.length / Object.keys(gameState.users).length >= 0.5 && !isGameStopped) {
+    if (gameState?.users) {
+        countUsers = Object.keys(gameState.users).length
+    }
+
+    if (gameState?.users && (gameState.stopGameVotes.length / countUsers >= 0.5) && !isGameStopped) {
         setIsGameStopped(true)
     }
     
@@ -199,13 +204,19 @@ export default function GameField () {
 
             <h2 className='round'>Раунд: {gameState.currentRound}</h2>
 
-            <Players gameState={gameState} voteForMeme={voteForMeme} isGameStopped={isGameStopped} />
+            <Players gameState={gameState} voteForMeme={voteForMeme} isGameStopped={isGameStopped} share={share} />
             <Situations gameState={gameState}/>
             <MyMemes myMemes={myMemes} setMyMemes={setMyMemes} selectMeme={selectMeme} />
 
             <div className='bottom-buttons'>
+                <button className='btn btn-warning' onClick={() => {}}>
+                    Выйти
+                </button>
                 <button className='btn btn-warning' onClick={voteForStopGame}>
-                    Остановить игру
+                    {`Остановить игру ${gameState?.stopGameVotes?.length}/${countUsers}`}
+                </button>
+                <button className='btn btn-warning' onClick={share}>
+                    Поделиться
                 </button>
             </div>
         </div>

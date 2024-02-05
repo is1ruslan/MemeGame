@@ -121,7 +121,6 @@ let selectedMemes2 = [
     "https://www.meme-arsenal.com/memes/50468f849f483e66997081888e6afd05.jpg",
     "https://www.meme-arsenal.com/memes/7a0ba999f5b3ac437137895ec9935a83.jpg",
     "https://www.meme-arsenal.com/memes/d9b16c83a93a34e331daf6c19db2c9f5.jpg",
-    "https://imgflip.com/s/meme/One-Does-Not-Simply.jpg",
     "https://imgflip.com/s/meme/Mocking-Spongebob.jpg",
     "https://imgflip.com/s/meme/Waiting-Skeleton.jpg",
     "https://imgflip.com/s/meme/Disaster-Girl.jpg",

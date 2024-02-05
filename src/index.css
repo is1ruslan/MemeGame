@@ -103,12 +103,30 @@ img:active {
   line-height: 100%;
 }
 
-.icon {
+.share-icon {
   margin: 0 auto;
   width: 50px;
   height: 50px;
 }
 
+.few-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.share {
+  margin-left: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.share-icon-end {
+  margin-left: 10px;
+  width: 30px;
+  height: 30px;
+}
 
 
 
@@ -186,8 +204,8 @@ img:active {
 
 .mymemes {
   display: block;
-  width: 24vh;
-  height: 24vh;
+  width: 15vw;
+  height: 15vw;
   margin: 5px;
 }
 
@@ -205,6 +223,7 @@ img:active {
   justify-content: center;
   align-items: center;
   margin-top: 15px;
+  margin: 10px;
   text-shadow: 
             -1px -1px 0 #000,  
             1px -1px 0 #000,
@@ -213,22 +232,25 @@ img:active {
 }
 
 .selectedMeme {
-  min-width: 20px;
-  min-height: 20px;
-  max-width: 200px;
-  max-height: 200px;
+  display: block;
+  width: 15vw;
+  height: 15vw;
   margin: 5px;
 }
 
 .bottom-buttons {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 
 @media screen and (max-width: 900px) {
   .winners {
     margin-right: 5vw;
+  }
+
+  .game-rules {
+    font-size: 3vw;
   }
 
   .mode {

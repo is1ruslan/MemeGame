@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Confetti from 'react-confetti'
 import { Modal, Button } from 'react-bootstrap'
+import {ReactComponent as ShareIcon} from './icons/share-apple.svg'
 
-export default function Players ({ gameState, voteForMeme, isGameStopped }) {
+export default function Players ({ gameState, voteForMeme, isGameStopped, share }) {
     const [playerStyles, setPlayerStyles] = useState({})
     const [winners, setWinners] = useState([])
     //const styles = ['orange', 'red', 'blue', 'purple', 'pink', 'green']
@@ -54,7 +55,7 @@ export default function Players ({ gameState, voteForMeme, isGameStopped }) {
                         <h5 style={{color: playerStyles[playerName]}}>{playerName + isVoted}</h5>
                         <h6 style={{color: playerStyles[playerName]}}>{playerData.points}</h6>
                         <button onClick={() => voteForMeme(playerName)}>
-                            <img className='rounded selectedMeme' src={playerData.selectedMeme} alt='' />
+                            <img className='rounded selectedMeme' src={playerData?.selectedMeme ? playerData.selectedMeme : ''} alt='' />
                         </button>
                     </div>
                 )
@@ -84,9 +85,15 @@ export default function Players ({ gameState, voteForMeme, isGameStopped }) {
                     </Modal.Header>
                     <Modal.Body className='centered-modal'>
                         <ul className='winners'>{showWinners}</ul>
-                        <Button className='modal-button' variant="warning" onClick={() => {}}>
-                            Начать новую игру
-                        </Button>
+                        <div className='few-buttons'>
+                            <Button className='modal-button' variant="warning" onClick={() => {}}>
+                                Начать новую игру 
+                            </Button>
+                            <Button className='modal-button share' variant="warning" onClick={share}>
+                                Поделиться 
+                                <div className='icon share-icon share-icon-end'><ShareIcon /></div>
+                            </Button>
+                        </div>
                     </Modal.Body>
                 </Modal>
             </>
