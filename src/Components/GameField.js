@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import {ReactComponent as ShareIcon} from './icons/share-apple.svg'
-import LightOff from './icons/light-off.png'
-import LightOn from './icons/light-on.png'
+import LeftEmoji from './icons/left.png'
+import RightEmoji from './icons/right.png'
 import MyMemes from './MyMemes'
 import Players from './Players'
-import Rules from './Rules'
+import Header from './Header'
+import Situations from './Situations'
 import config from './config'
 
 export default function GameField () {
@@ -162,16 +163,21 @@ export default function GameField () {
         setIsGameStopped(true)
     }
     
+    if (darkMode) {
+        document.body.classList.add('dark')
+    } else {
+        document.body.classList.remove('dark');
+    }
 
     return (
-        <div className={`game ${darkMode ? 'dark' : ''}`}>
+        <div className='game'>
             <Modal className='modal' centered show={modal} onHide={() => connectHandler()} >
-                <Modal.Header className={`centered-modal ${darkMode ? 'dark' : ''}`}>
+                <Modal.Header className='centered-modal'>
                     <Modal.Title>Пиши ник сюда</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className={`centered-modal ${darkMode ? 'dark' : ''}`}>
+                <Modal.Body className='centered-modal'>
                     <input className='modal-input' type="text" ref={usernameRef} />
-                    <p className='link-p'>Ссылка на комнату</p>
+                    <h5 className='link-text'>Ссылка на комнату</h5>
                     <div className='link-block'>
                         <div className='room-link'>
                             <p>{'13.51.160.23/'+params.id}</p>
@@ -184,34 +190,24 @@ export default function GameField () {
                 </Modal.Body>
             </Modal>
 
-            <div className='header'>
-                <Rules darkMode={darkMode}/>
-                <button onClick={() => setDarkMode(!darkMode)}><img className='mode' src={darkMode ? LightOn : LightOff}/></button>
-            </div>
-
-            <div className='game-info'>
-                <img className='logo' src='https://i.pinimg.com/originals/4b/52/17/4b5217cc5d784890f44aeb01a5ad7db6.png' alt='logo' />
-                <h1 className='game-name'>Memezis<span> Beta</span></h1>
+            <Header darkMode={darkMode} setDarkMode={setDarkMode} />
+            
+            <div className='emojies'>
+                <img src={LeftEmoji} />
+                <img src={RightEmoji} />
             </div>
 
             <h2 className='round'>Раунд: {gameState.currentRound}</h2>
 
-            <Players gameState={gameState} voteForMeme={voteForMeme} isGameStopped={isGameStopped} darkMode={darkMode}/>
-            <div className='mx-auto d-flex align-items-center justify-content-center'>
-                <div className='situation card text-black bg-warning m-3' >
-                    <div className='card-body d-flex align-items-center text-center'>
-                        <p className='card-text'>
-                            {gameState.currentSituation}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
+            <Players gameState={gameState} voteForMeme={voteForMeme} isGameStopped={isGameStopped} />
+            <Situations gameState={gameState}/>
             <MyMemes myMemes={myMemes} setMyMemes={setMyMemes} selectMeme={selectMeme} />
 
-            <button className='btn btn-warning' onClick={voteForStopGame}>
-                Остановить игру
-            </button>
+            <div className='bottom-buttons'>
+                <button className='btn btn-warning' onClick={voteForStopGame}>
+                    Остановить игру
+                </button>
+            </div>
         </div>
     )
 }

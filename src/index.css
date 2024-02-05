@@ -1,15 +1,13 @@
 * {
   color: black;
+  z-index: 2;
 }
 
-.game {
+body {
   background: linear-gradient(to bottom, #8edeff 0%, #edf7fc 100%);
-  padding: 20px;
+  /* background: #8edeff; */
   font-family: 'Karla', sans-serif;
   font-weight: 700;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
 }
 
@@ -39,6 +37,15 @@ button img {
   object-fit: contain;
 }
 
+img:active {
+  box-shadow: 0px 0px 15px yellow;
+}
+
+.header img:active,
+.emojies img:active {
+  box-shadow: none;
+}
+
 .modal-open {
   overflow: visible !important;
 }
@@ -57,15 +64,21 @@ button img {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-right: 4vw;
+  margin-right: 1.5vw;
 }
 
 .modal-input {
   font-size: 16px;
+  font-weight: 600;
   color: black;
+  border-radius: 8px;
 }
 
 .modal-button {
+  margin-top: 15px;
+}
+
+.link-text {
   margin-top: 15px;
 }
 
@@ -73,8 +86,8 @@ button img {
   display: block;
   width: 90%;
   height: 100%;
-  /* border-radius: 10%; */
-  background-color: rgba(197, 197, 197, 0.5);
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255);
 }
 
 .room-link {
@@ -83,20 +96,24 @@ button img {
   align-items: center;
 }
 
+.room-link p{
+  margin: 0 auto;
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 100%;
+}
+
 .icon {
-  width: 60px;
-  height: 60px;
+  margin: 0 auto;
+  width: 50px;
+  height: 50px;
 }
 
 
-.game {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+
 
 .header {
+  margin: auto;
   width: 90vw;
   display: flex;
   justify-content: space-between;
@@ -109,8 +126,23 @@ button img {
 }
 
 .mode {
-  width: 10vw;
-  height: 10vw;
+  margin-bottom: 15px;
+  width: 4vw;
+  height: 4vw;
+}
+
+.emojies {
+  position: absolute;
+  width: 60vw;
+  margin-left: 20vw;
+  display: flex;
+  justify-content: space-between;
+  z-index: 1;
+}
+
+.emojies img {
+  width: 15%;
+  height: 15%;
 }
 
 
@@ -122,6 +154,7 @@ button img {
 }
 
 .logo {
+  margin-bottom: 10px;
   height: 50px;
   width: 50px;
 }
@@ -148,17 +181,18 @@ button img {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  margin-left: -1.5vw;
 }
 
 .mymemes {
-  min-width: 20px;
-  min-height: 20px;
-  max-width: 200px;
-  max-height: 200px;
-  margin: 2px;
+  display: block;
+  width: 24vh;
+  height: 24vh;
+  margin: 5px;
 }
 
 .players {
+  margin: 0 auto;
   width: 90vw;
   display: flex;
   justify-content: space-evenly;
@@ -186,13 +220,31 @@ button img {
   margin: 5px;
 }
 
+.bottom-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+
 @media screen and (max-width: 900px) {
-  .game-info {
-    margin-top: 20px;
+  .winners {
+    margin-right: 5vw;
   }
 
-  .game-rules {
-    margin-top: -10px;
+  .mode {
+    width: 10vw;
+    height: 10vw;
+  }
+
+  .emojies {
+    width: 90vw;
+    margin-left: 7vw;
+    margin-top: 30px;
+  }
+
+  .emojies img {
+    width: 25%;
+    height: 25%;
   }
 
   .selectedMeme {
@@ -203,7 +255,7 @@ button img {
 
   .memes-list {
     width: 100vw;
-    margin-left: -7vw;
+    margin-left: -3.5vw;
   }
 
   .mymemes {
@@ -223,6 +275,10 @@ button img {
   .card-text {
     font-size: 4vw;
   }
+
+  .room-link p{
+    font-size: 18px;
+  }
 }
 
 .dark,
@@ -233,21 +289,10 @@ button img {
 .dark h5,
 .dark h6,
 .dark .centered-modal {
-  background: black;
   color: white;
 }
 
-/* :root {
-  --color: black;
-  --bg: linear-gradient(to bottom, #8edeff 0%, #edf7fc 100%);
+.dark,
+.dark .centered-modal  {
+  background: black;
 }
-
-.dark {
-  --color: white;
-  --bg: black;
-}
-
-.centered-modal {
-  color: var(--color);
-  background: var(--bg);
-} */

@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-export default function Situations () {
-    const [currentSituation, setCurrentSituation] = useState('')
+export default function Situations ({ gameState }) {
 
     return (
         <div className='mx-auto d-flex align-items-center justify-content-center'>
-            <div className='card text-black bg-warning m-3' style={{height: 300, width: 200}}>
-                <div className='card-body d-flex align-items-center text-center'>
+                <div className='card text-black bg-warning m-3' >
+                    <div className='situation card-body d-flex align-items-center text-center'>
                     <p className='card-text'>
-                        {currentSituation}
+                        {gameState.currentSituation}
                     </p>
                 </div>
             </div>

@@ -7,20 +7,18 @@ export default function App () {
     const [gameStarted, setGameStarted] = useState(false)
 
     return (
-        <BrowserRouter>
-            <div>
-                {
-                !gameStarted ?
-                    <Switch>
-                        <Route path='/:id'>
-                            <GameField />
-                        </Route>
-                        <Redirect to={`${+new Date}`.toString(16)}/>
-                    </Switch>
-                :
-                <Start setGameStarted={setGameStarted} />
-                }
-            </div>
+        <BrowserRouter>           
+            {
+            !gameStarted ?
+                <Switch>
+                    <Route path='/:id'>
+                        <GameField />
+                    </Route>
+                    <Redirect to={`${+new Date}`.toString(16)}/>
+                </Switch>
+            :
+            <Start setGameStarted={setGameStarted} />
+            }
         </BrowserRouter>
     )
 }
