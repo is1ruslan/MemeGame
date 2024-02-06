@@ -16,7 +16,7 @@ export default function GameField () {
     const [socket, setSocket] = useState(null)
     const [myMemes, setMyMemes] = useState([])
     const [gameState, setGameState] = useState({})
-    const [modal, setModal] = useState(true)
+    const [enterModal, setEnterModal] = useState(true)
     const [username, setUsername] = useState('')
     const [isGameStopped, setIsGameStopped] = useState(false)
     const [darkMode, setDarkMode] = useState(false)
@@ -76,10 +76,10 @@ export default function GameField () {
     const connectHandler = () => {
         if (usernameRef.current.value) {
             setUsername(usernameRef.current.value)
-            setModal(false)
+            setEnterModal(false)
         } else {
             setUsername(`Anon${Math.round(Math.random() * 1000)}`)
-            setModal(false)
+            setEnterModal(false)
         }
     }
 
@@ -101,9 +101,13 @@ export default function GameField () {
 
         newSocket.onmessage = (event) => {
             const data = JSON.parse(event.data)
- 
+            
             if (data) {
                 setGameState(data)
+                if (Object.keys(data.users).length === 0) {
+                    setIsGameStopped(false)
+                    setEnterModal(true)
+                }
             }
 
             console.log('You have a message: ', event.data)
@@ -113,7 +117,7 @@ export default function GameField () {
             console.log('WebSocket connection closed')
 
             // Trying to reconnect user if he had been disconnected by server 
-            setTimeout(connectSocket, 3000)
+            // setTimeout(connectSocket, 3000)
         }
     
         newSocket.onerror = (error) => {
@@ -145,7 +149,6 @@ export default function GameField () {
                 voteFor: selectedUsername,
                 id: params.id
             }))
-            console.log('New voter for meme: ', username)
         }
     }
 
@@ -156,9 +159,29 @@ export default function GameField () {
                 voter: username,
                 id: params.id
             }))
-            console.log('New voter for stop game: ', username)
         }
     }
+
+    const startNewGame = () => {
+        if (socket && socket.readyState === WebSocket.OPEN && isGameStopped) {
+            socket.send(JSON.stringify({
+                method: 'startNewGame',
+                id: params.id
+            }))
+        }
+    }
+
+    const disConnectHandler = () => {
+        if (socket && socket.readyState === WebSocket.OPEN && username) {
+            socket.send(JSON.stringify({
+                method: 'disconnectUser',
+                id: params.id,
+                username: username
+            }))
+        setEnterModal(true)
+        }
+    }
+
 
     if (gameState?.users) {
         countUsers = Object.keys(gameState.users).length
@@ -174,9 +197,10 @@ export default function GameField () {
         document.body.classList.remove('dark');
     }
 
+
     return (
         <div className='game'>
-            <Modal className='modal' centered show={modal} onHide={() => connectHandler()} >
+            <Modal className='modal' centered show={enterModal} onHide={() => connectHandler()} >
                 <Modal.Header className='centered-modal'>
                     <Modal.Title>Пиши ник сюда</Modal.Title>
                 </Modal.Header>
@@ -204,16 +228,16 @@ export default function GameField () {
 
             <h2 className='round'>Раунд: {gameState.currentRound}</h2>
 
-            <Players gameState={gameState} voteForMeme={voteForMeme} isGameStopped={isGameStopped} share={share} />
+            <Players gameState={gameState} voteForMeme={voteForMeme} isGameStopped={isGameStopped} share={share} startNewGame={startNewGame}/>
             <Situations gameState={gameState}/>
             <MyMemes myMemes={myMemes} setMyMemes={setMyMemes} selectMeme={selectMeme} />
 
             <div className='bottom-buttons'>
-                <button className='btn btn-warning' onClick={() => {}}>
+                <button className='btn btn-warning' onClick={disConnectHandler}>
                     Выйти
                 </button>
                 <button className='btn btn-warning' onClick={voteForStopGame}>
-                    {`Остановить игру ${gameState?.stopGameVotes?.length}/${countUsers}`}
+                    {`Остановить игру ${gameState.stopGameVotes?.length}/${countUsers}`}
                 </button>
                 <button className='btn btn-warning' onClick={share}>
                     Поделиться

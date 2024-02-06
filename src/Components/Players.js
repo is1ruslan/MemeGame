@@ -3,7 +3,7 @@ import Confetti from 'react-confetti'
 import { Modal, Button } from 'react-bootstrap'
 import {ReactComponent as ShareIcon} from './icons/share-apple.svg'
 
-export default function Players ({ gameState, voteForMeme, isGameStopped, share }) {
+export default function Players ({ gameState, voteForMeme, isGameStopped, share, startNewGame }) {
     const [playerStyles, setPlayerStyles] = useState({})
     const [winners, setWinners] = useState([])
     //const styles = ['orange', 'red', 'blue', 'purple', 'pink', 'green']
@@ -79,14 +79,14 @@ export default function Players ({ gameState, voteForMeme, isGameStopped, share 
         {isGameStopped && (
             <>
                 <Confetti numberOfPieces={500} gravity={0.1} />
-                <Modal centered className='modal' show={true} onHide={() => {}} >
+                <Modal centered className='modal' show={isGameStopped} onHide={() => {}} >
                     <Modal.Header className='centered-modal'>
                         <Modal.Title>И перед нами победитель🎉</Modal.Title>
                     </Modal.Header>
                     <Modal.Body className='centered-modal'>
                         <ul className='winners'>{showWinners}</ul>
                         <div className='few-buttons'>
-                            <Button className='modal-button' variant="warning" onClick={() => {}}>
+                            <Button className='modal-button' variant="warning" onClick={startNewGame}>
                                 Начать новую игру 
                             </Button>
                             <Button className='modal-button share' variant="warning" onClick={share}>

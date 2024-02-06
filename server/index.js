@@ -19,6 +19,9 @@ app.ws('/', (ws, req) => {
                 case 'New connection':
                     connectionHandler(ws, msg)
                     break 
+                case 'disconnectUser':
+                    disconnectUser(msg)
+                    break
                 case 'selectMeme':
                     handleSelectMeme(msg)
                     break
@@ -28,6 +31,9 @@ app.ws('/', (ws, req) => {
                 case 'voteForStopGame':
                     handleVoteForStopGame(msg)
                     break
+                case 'startNewGame':
+                    handleStartNewGame(msg)
+                    break
             }
         } catch (error) {
             console.error('Error with message processing', error)
@@ -36,6 +42,17 @@ app.ws('/', (ws, req) => {
 })
 
 app.listen(PORT, () => console.log(`Port started on Port ${PORT}`))
+
+
+// State update for all users
+const broadcastUpdatedState = (msg) => {
+    aWss.clients.forEach(client => {
+        if (client.id === msg.id) {
+            client.send(JSON.stringify(commonState[msg.id]))
+        }
+    })
+    console.log(`new commonState: ${JSON.stringify(commonState)}${'\n'}`)
+}
 
 
 // New user connection
@@ -51,6 +68,8 @@ const connectionHandler = (ws, msg) => {
         }
     }
 
+    console.log(msg.username)
+
     commonState[msg.id].users[msg.username] = {
         selectedMeme: null,
         points: 0,
@@ -58,17 +77,6 @@ const connectionHandler = (ws, msg) => {
     }
 
     broadcastUpdatedState(msg)
-}
-
-
-// State update for all users
-const broadcastUpdatedState = (msg) => {
-    aWss.clients.forEach(client => {
-        if (client.id === msg.id) {
-            client.send(JSON.stringify(commonState[msg.id]))
-        }
-    })
-    console.log(`new commonState: ${JSON.stringify(commonState)}${'\n'}`)
 }
 
 
@@ -118,6 +126,26 @@ const handleVoteForStopGame = (msg) => {
     if (sessionData.stopGameVotes.length / countUsers >= 0.5) {
         console.log('The game is stopped')
     }
+
+    broadcastUpdatedState(msg)
+}
+
+const handleStartNewGame = (msg) => {
+    unusedSituations[msg.id] = new Set(situationsList)
+
+    commonState[msg.id] = {
+        currentSituation: randomSituation(msg),
+        currentRound: 1,
+        votes: [],
+        stopGameVotes: [],
+        users: {}
+    }
+
+    broadcastUpdatedState(msg)
+}
+
+const disconnectUser = (msg) => {    
+    delete commonState[msg.id].users[msg.username]
 
     broadcastUpdatedState(msg)
 }
