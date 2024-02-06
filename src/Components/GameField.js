@@ -65,7 +65,7 @@ export default function GameField () {
                 await navigator.clipboard.writeText(url)
                 alert('Link has copied')
             } catch (error) {
-                alert('Copy error: ', error)
+                alert('Copy error: ' + error)
             }
         } else {
             alert('Автоматическое копирование недоступно. Пожалуйста, скопируйте ссылку вручную.')
@@ -187,7 +187,7 @@ export default function GameField () {
         countUsers = Object.keys(gameState.users).length
     }
 
-    if (gameState?.users && (gameState.stopGameVotes.length / countUsers >= 0.5) && !isGameStopped) {
+    if (gameState?.users && (gameState?.stopGameVotes?.length / countUsers >= 0.5) && !isGameStopped) {
         setIsGameStopped(true)
     }
     
@@ -199,7 +199,7 @@ export default function GameField () {
 
 
     return (
-        <div className='game'>
+        <div className={`game ${darkMode ? 'dark' : ''}`}>
             <Modal className='modal' centered show={enterModal} onHide={() => connectHandler()} >
                 <Modal.Header className='centered-modal'>
                     <Modal.Title>Пиши ник сюда</Modal.Title>
@@ -237,7 +237,7 @@ export default function GameField () {
                     Выйти
                 </button>
                 <button className='btn btn-warning' onClick={voteForStopGame}>
-                    {`Остановить игру ${gameState.stopGameVotes?.length}/${countUsers}`}
+                    {`Остановить игру ${gameState?.stopGameVotes?.length}/${countUsers}`}
                 </button>
                 <button className='btn btn-warning' onClick={share}>
                     Поделиться

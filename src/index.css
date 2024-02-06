@@ -4,10 +4,15 @@
 }
 
 body {
-  background: linear-gradient(to bottom, #8edeff 0%, #edf7fc 100%);
-  /* background: #8edeff; */
+  /* background: linear-gradient(to bottom, #8edeff 0%, #edf7fc 100%); */
+  background: #8edeff;
   font-family: 'Karla', sans-serif;
   font-weight: 700;
+  min-height: 100vh;
+}
+
+.game{
+  background: linear-gradient(to bottom, #8edeff 0%, #edf7fc 100%);
   min-height: 100vh;
 }
 
