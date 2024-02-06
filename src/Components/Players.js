@@ -45,17 +45,17 @@ export default function Players ({ gameState, voteForMeme, isGameStopped, share,
 
 
     if (gameState?.users) {
-        var players = Object.keys(gameState.users).map((playerName) => {
+        var players = Object.keys(gameState.users).map((playerName, i) => {
             if (playerName !== 'currentSituation' && playerName !== 'currentRound') {
                 const playerData = gameState.users[playerName]
                 const isVoted = gameState.votes.includes(playerName) ? '✅' : ''
 
                 return (
-                    <div key={playerName} className='player'>
+                    <div key={i} className='player'>
                         <h5 style={{color: playerStyles[playerName]}}>{playerName + isVoted}</h5>
                         <h6 style={{color: playerStyles[playerName]}}>{playerData.points}</h6>
                         <button onClick={() => voteForMeme(playerName)}>
-                            <img className='rounded selectedMeme' src={playerData?.selectedMeme ? playerData.selectedMeme : ''} alt='' />
+                            <img className='rounded selectedMeme' src={playerData?.selectedMeme ? playerData.selectedMeme : null} alt='' />
                         </button>
                     </div>
                 )

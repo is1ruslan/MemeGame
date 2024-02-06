@@ -10,12 +10,16 @@ let unusedSituations = {}
 
 
 app.ws('/', (ws, req) => {
+    //res.set('Cache-Control', 'no-cache')
     console.log('Connected')
 
     ws.on('message', (msg) => {
         try {
             msg = JSON.parse(msg)
             switch (msg.method) {
+                case 'New noname connection':
+                    connectionHandler(ws, msg)
+                    break
                 case 'New connection':
                     connectionHandler(ws, msg)
                     break 
@@ -68,12 +72,16 @@ const connectionHandler = (ws, msg) => {
         }
     }
 
-    console.log(msg.username)
-
-    commonState[msg.id].users[msg.username] = {
-        selectedMeme: null,
-        points: 0,
-        ...msg.gamestate[msg.username]
+    if (!commonState[msg.id].users[msg.username] && msg.username) {
+        commonState[msg.id].users[msg.username] = {
+            selectedMeme: '',
+            points: 0,
+        }
+    } else if (commonState[msg.id].users[msg.username] && msg.username) {
+        commonState[msg.id].users[msg.username] = {
+            selectedMeme: '',
+            points: commonState[msg.id].users[msg.username]?.points
+        }
     }
 
     broadcastUpdatedState(msg)
@@ -88,7 +96,7 @@ const handleSelectMeme = (msg) => {
     } else {
         commonState[msg.id].users[msg.username] = {
             selectedMeme: msg.selectedMeme,
-            points: commonState[msg.id].users[msg.username].points,
+            points: commonState[msg.id].users[msg.username]?.points,
         }
     }
     broadcastUpdatedState(msg)
@@ -145,7 +153,9 @@ const handleStartNewGame = (msg) => {
 }
 
 const disconnectUser = (msg) => {    
-    delete commonState[msg.id].users[msg.username]
+    if (msg.username) {
+        delete commonState[msg.id].users[msg.username]
+    }
 
     broadcastUpdatedState(msg)
 }

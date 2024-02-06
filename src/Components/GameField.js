@@ -89,12 +89,19 @@ export default function GameField () {
 
         newSocket.onopen = () => {
             console.log('WebSocket connection established')
+            
             if (username) {
                 newSocket.send(JSON.stringify({
                     method: 'New connection',
                     id: params.id,
                     username: username,
                     gamestate: gameState
+                }))
+            } else {
+                // Added to prevent users from selecting the same names
+                newSocket.send(JSON.stringify({
+                    method: 'New noname connection',
+                    id: params.id
                 }))
             }
         }
@@ -115,6 +122,9 @@ export default function GameField () {
     
         newSocket.onclose = () => {
             console.log('WebSocket connection closed')
+            if (!enterModal) {
+                alert('Соединение прервано! Переподключитесь, введя такой же ник')
+            }
 
             // Trying to reconnect user if he had been disconnected by server 
             // setTimeout(connectSocket, 3000)
@@ -131,7 +141,7 @@ export default function GameField () {
 
     // Update game State
     const selectMeme = (meme) => {
-        if (socket && socket.readyState === WebSocket.OPEN && !gameState.users[username].selectedMeme) {
+        if (socket && socket.readyState === WebSocket.OPEN && !gameState.users[username]?.selectedMeme) {
             socket.send(JSON.stringify({
                 method: 'selectMeme',
                 username: username,
