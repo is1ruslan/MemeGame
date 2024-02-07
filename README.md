@@ -7,16 +7,16 @@
 
 <h3>Key Features:</h3>
 <b>Unique Gameplay and Fun:</b><br>
-• Every round of the game is a new experience with unique situations that make the game fun and engaging.
+• Every round of the game is a new experience with unique situations that make the game fun and engaging.<br>
 
 <b>Unique Sessions:</b><br>
-• Create your own room (game session) and play with friends
+• Create your own room (game session) and play with friends.
 
 <b>Extensive Content Library:</b><br>
 • With over 200 different scenarios and approximately 400 memes, the game boasts a vast repository of content that ensures a wide variety of humor and replayability (~80,000 combinations).
 
 <b>Scoring and Winning:</b><br>
-• Victory is a matter of wit and humor, players aim to collect the most points through the rounds by winning votes for their chosen memes. But the main thing in the game is not to win, but to have fun and have a good time😉</p>
+• Victory is a matter of wit and humor, players aim to collect the most points through the rounds by winning votes for their chosen memes. But the main thing is not to win, but to have fun and have a good time😉</p>
 
 <!-- 👉 Live site: <a href='https://memezis.app/'>Memezis</a> -->
 
