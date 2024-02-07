@@ -9,8 +9,7 @@
 <b>Unique Gameplay and Fun:</b><br>
 • Every round of the game is a new experience with unique situations that make the game fun and engaging.
 
-
-<b>Unique Sessions:</b><br>
+<br><b>Unique Sessions:</b><br>
 • Create your own room (game session) and play with friends.
 
 <b>Extensive Content Library:</b><br>
