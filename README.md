@@ -4,18 +4,18 @@
 <h2>About the project</h2>
 
 <p><b>Memezis</b>is a hilarious multiplayer online game that challenges players to showcase their sense of humor. In this game, participants are tasked with selecting the funniest meme from their deck that best fits a given situation. Once the memes are displayed, each player votes for the one they find most humorous, except their own.
-<br>
+
 <h3>Key Features:</h3>
-<b>Unique Gameplay Sessions:</b>
-• Create your own room (game session) and play with friends
-<br>
-<b>Unique and Fun:</b>
+<b>Unique Gameplay and Fun:</b><br>
 • Every round of the game is a new experience with unique situations that make the game fun and engaging.
-<br>
-<b>Extensive Content Library:</b>
+
+<b>Unique Sessions:</b><br>
+• Create your own room (game session) and play with friends
+
+<b>Extensive Content Library:</b><br>
 • With over 200 different scenarios and approximately 400 memes, the game boasts a vast repository of content that ensures a wide variety of humor and replayability (~80,000 combinations).
-<br>
-<b>Scoring and Winning:</b>
+
+<b>Scoring and Winning:</b><br>
 • Victory is a matter of wit and humor, players aim to collect the most points through the rounds by winning votes for their chosen memes. But the main thing in the game is not to win, but to have fun and have a good time😉</p>
 
 <!-- 👉 Live site: <a href='https://memezis.app/'>Memezis</a> -->
