@@ -3,16 +3,20 @@
 # Meme Game App
 <h2>About the project</h2>
 
-<p><h4>Memezis</h4>is a hilarious multiplayer online game that challenges players to showcase their sense of humor. In this game, participants are tasked with selecting the funniest meme from their deck that best fits a given situation. Once the memes are displayed, each player votes for the one they find most humorous, except their own.
+<p><b>Memezis</b>is a hilarious multiplayer online game that challenges players to showcase their sense of humor. In this game, participants are tasked with selecting the funniest meme from their deck that best fits a given situation. Once the memes are displayed, each player votes for the one they find most humorous, except their own.
 <br>
 <h3>Key Features:</h3>
-<h4>Unique Gameplay Sessions:</h4> Create your own room (game session) and play with friends
+<b>Unique Gameplay Sessions:</b>
+• Create your own room (game session) and play with friends
 <br>
-<h4>Unique and Fun:</h4> Every round of the game is a new experience with unique situations that make the game fun and engaging.
+<b>Unique and Fun:</b>
+• Every round of the game is a new experience with unique situations that make the game fun and engaging.
 <br>
-<h4>Extensive Content Library:</h4> With over 200 different scenarios and approximately 400 memes, the game boasts a vast repository of content that ensures a wide variety of humor and replayability (~80,000 combinations).
+<b>Extensive Content Library:</b>
+• With over 200 different scenarios and approximately 400 memes, the game boasts a vast repository of content that ensures a wide variety of humor and replayability (~80,000 combinations).
 <br>
-<h4>Scoring and Winning:</h4> Victory is a matter of wit and humor; players aim to collect the most points through the rounds by winning votes for their chosen memes.</p>
+<b>Scoring and Winning:</b>
+• Victory is a matter of wit and humor, players aim to collect the most points through the rounds by winning votes for their chosen memes. But the main thing in the game is not to win, but to have fun and have a good time😉</p>
 
 <!-- 👉 Live site: <a href='https://memezis.app/'>Memezis</a> -->
 
