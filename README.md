@@ -8,7 +8,8 @@
 <h3>Key Features:</h3>
 <b>Unique Gameplay and Fun:</b><br>
 • Every round of the game is a new experience with unique situations that make the game fun and engaging.
-<br>
+
+
 <b>Unique Sessions:</b><br>
 • Create your own room (game session) and play with friends.
 
