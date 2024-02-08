@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import selectedMemes2 from './memes/selected2'
 
-export default function MyMemes ({ myMemes, setMyMemes, selectMeme }) {
+export default function MyMemes ({ selectMeme }) {
+    const [myMemes, setMyMemes] = useState([])
     const [unusedMemes, setUnusedMemes] = useState()
 
     useEffect(() => {

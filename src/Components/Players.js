@@ -74,6 +74,7 @@ export default function Players ({ gameState, voteForMeme, isGameStopped, share,
 
     return (
         <>
+        <h2 className='round'>Раунд: {gameState.currentRound}</h2>
         <div className="players">{players}</div>
 
         {isGameStopped && (

@@ -16,6 +16,11 @@ body {
   min-height: 100vh;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 ul {
   display: flex;
   flex-wrap: wrap;
@@ -39,8 +44,12 @@ button {
 }
 
 button img {
-  object-fit: contain;
+  /* object-fit: cover; */
   transform: translateZ(0);
+}
+
+img:hover {
+  box-shadow: 0px 0px 15px rgb(192, 98, 255);
 }
 
 img:active {
@@ -48,8 +57,40 @@ img:active {
 }
 
 .header img:active,
-.emojies img:active {
+.emojies-bg img:active, 
+.header img:hover,
+.emojies-bg img:hover {
   box-shadow: none;
+}
+
+footer svg:hover {
+  stroke: orange;
+}
+
+.dark,
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6,
+.dark a,
+.dark .centered-modal {
+  color: white;
+}
+
+.dark,
+.dark .centered-modal  {
+  background: black;
+}
+
+.dark svg {
+  stroke: white;
+}
+
+.dark footer svg:hover,
+.dark a:hover {
+  stroke: yellow;
 }
 
 .modal-open {
@@ -155,18 +196,21 @@ img:active {
   height: 4vw;
 }
 
-.emojies {
+.phone-bg,
+.tablet-bg {
+  display: none;
+}
+
+.emojies-bg {
   position: absolute;
-  width: 60vw;
-  margin-left: 20vw;
-  display: flex;
-  justify-content: space-between;
+  top: 0;
+  width: 100vw;
   z-index: 1;
 }
 
-.emojies img {
-  width: 15%;
-  height: 15%;
+.emojies-bg img {
+  width: 100%;
+  height: 100%;
 }
 
 
@@ -216,10 +260,10 @@ img:active {
 }
 
 .players {
-  margin: 0 auto;
+  margin: 15px auto;
   width: 90vw;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
@@ -249,6 +293,21 @@ img:active {
   justify-content: space-evenly;
 }
 
+.contacts {
+  width: 95vw;
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media screen and (min-width: 900px) {
+  .bottom-buttons button {
+    width: 20vw;
+    height: 3vw;
+    font-size: 1vw;
+  }
+}
+
 
 @media screen and (max-width: 900px) {
   .winners {
@@ -264,16 +323,19 @@ img:active {
     height: 10vw;
   }
 
-  .emojies {
-    width: 90vw;
-    margin-left: 7vw;
-    margin-top: 30px;
+  .pc-bg {
+    display: none;
   }
 
-  .emojies img {
-    width: 25%;
-    height: 25%;
+  .phone-bg {
+    display: block;
   }
+
+  .emojies-bg {
+    width: 100vw;
+    top: 0;
+  }
+
 
   .selectedMeme {
     width: 25vw;
@@ -309,18 +371,13 @@ img:active {
   }
 }
 
-.dark,
-.dark h1,
-.dark h2,
-.dark h3,
-.dark h4,
-.dark h5,
-.dark h6,
-.dark .centered-modal {
-  color: white;
-}
+@media screen and (min-width: 700px) and (max-width: 900px) {
+  .pc-bg,
+  .phone-bg {
+    display: none;
+  }
 
-.dark,
-.dark .centered-modal  {
-  background: black;
+  .tablet-bg {
+    display: block;
+  }
 }

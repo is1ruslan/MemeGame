@@ -2,19 +2,20 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import {ReactComponent as ShareIcon} from './icons/share-apple.svg'
-import LeftEmoji from './icons/left.png'
-import RightEmoji from './icons/right.png'
+import PhoneBg from './icons/phone-bg.png'
+import TabletBg from './icons/tablet-bg.png'
+import PcBg from './icons/pc-bg.png'
 import MyMemes from './MyMemes'
 import Players from './Players'
 import Header from './Header'
 import Situations from './Situations'
+import Footer from './Footer'
 import config from './config'
 
 export default function GameField () {
     const usernameRef = useRef(null)
     const params = useParams()
     const [socket, setSocket] = useState(null)
-    const [myMemes, setMyMemes] = useState([])
     const [gameState, setGameState] = useState({})
     const [enterModal, setEnterModal] = useState(true)
     const [username, setUsername] = useState('')
@@ -229,29 +230,35 @@ export default function GameField () {
                 </Modal.Body>
             </Modal>
 
-            <Header darkMode={darkMode} setDarkMode={setDarkMode} />
+            <Header 
+                darkMode={darkMode} 
+                setDarkMode={setDarkMode} 
+            />
+            <Players 
+                gameState={gameState} 
+                voteForMeme={voteForMeme} 
+                isGameStopped={isGameStopped} 
+                share={share} 
+                startNewGame={startNewGame}
+            />
+            <Situations 
+                gameState={gameState}
+            />
+            <MyMemes 
+                selectMeme={selectMeme} 
+            />
+            <Footer 
+                gameState={gameState} 
+                disConnectHandler={disConnectHandler} 
+                voteForStopGame={voteForStopGame} 
+                countUsers={countUsers} 
+                share={share} 
+            />
             
-            <div className='emojies'>
-                <img src={LeftEmoji} />
-                <img src={RightEmoji} />
-            </div>
-
-            <h2 className='round'>Раунд: {gameState.currentRound}</h2>
-
-            <Players gameState={gameState} voteForMeme={voteForMeme} isGameStopped={isGameStopped} share={share} startNewGame={startNewGame}/>
-            <Situations gameState={gameState}/>
-            <MyMemes myMemes={myMemes} setMyMemes={setMyMemes} selectMeme={selectMeme} />
-
-            <div className='bottom-buttons'>
-                <button className='btn btn-warning' onClick={disConnectHandler}>
-                    Выйти
-                </button>
-                <button className='btn btn-warning' onClick={voteForStopGame}>
-                    {`Остановить игру ${gameState?.stopGameVotes?.length}/${countUsers}`}
-                </button>
-                <button className='btn btn-warning' onClick={share}>
-                    Поделиться
-                </button>
+            <div className='emojies-bg'>
+                <img className='pc-bg' src={PcBg} />
+                <img className='phone-bg' src={PhoneBg} />
+                <img className='tablet-bg' src={TabletBg} />
             </div>
         </div>
     )
