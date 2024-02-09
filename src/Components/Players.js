@@ -55,7 +55,11 @@ export default function Players ({ gameState, voteForMeme, isGameStopped, share,
                         <h5 style={{color: playerStyles[playerName]}}>{playerName + isVoted}</h5>
                         <h6 style={{color: playerStyles[playerName]}}>{playerData.points}</h6>
                         <button onClick={() => voteForMeme(playerName)}>
-                            <img className='rounded selectedMeme' src={playerData?.selectedMeme ? playerData.selectedMeme : null} alt='' />
+                            <img 
+                                className={`rounded ${playerData.selectedMeme ? 'selectedMeme' : 'nomeme'}`} 
+                                src={playerData.selectedMeme || ''} 
+                                alt=''
+                            />
                         </button>
                     </div>
                 )

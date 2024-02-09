@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import {ReactComponent as ShareIcon} from './icons/share-apple.svg'
-import PhoneBg from './icons/phone-bg.png'
-import TabletBg from './icons/tablet-bg.png'
-import PcBg from './icons/pc-bg.png'
+import PhoneBg from './icons/bg-phone.png'
+import TabletBg from './icons/bg-tablet.png'
+import PcBg from './icons/bg-pc.png'
 import MyMemes from './MyMemes'
 import Players from './Players'
 import Header from './Header'
@@ -45,33 +45,7 @@ export default function GameField () {
             if (socket) socket.close()
         }
     }, [username, params.id])
-
-
-    const share = async () => {
-        const url = `http://13.51.160.23/${params.id}`
-
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: 'Привет', 
-                    text: 'Заходи, я создал', 
-                    url: params.id, 
-                })
-                console.log('Share successful')
-            } catch(error) {
-                alert('Share error: ' + error)
-            }
-        } else if (navigator.clipboard) {
-            try {
-                await navigator.clipboard.writeText(url)
-                alert('Link has copied')
-            } catch (error) {
-                alert('Copy error: ' + error)
-            }
-        } else {
-            alert('Автоматическое копирование недоступно. Пожалуйста, скопируйте ссылку вручную.')
-        }
-    } 
+ 
 
     // For new users
     const connectHandler = () => {
@@ -190,6 +164,33 @@ export default function GameField () {
                 username: username
             }))
         setEnterModal(true)
+        }
+    }
+
+    
+    const share = async () => {
+        const url = `http://13.51.160.23/${params.id}`
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Привет', 
+                    text: 'Заходи, я создал', 
+                    url: params.id, 
+                })
+                console.log('Share successful')
+            } catch(error) {
+                alert('Share error: ' + error)
+            }
+        } else if (navigator.clipboard) {
+            try {
+                await navigator.clipboard.writeText(url)
+                alert('Link has copied')
+            } catch (error) {
+                alert('Copy error: ' + error)
+            }
+        } else {
+            alert('Автоматическое копирование недоступно. Пожалуйста, скопируйте ссылку вручную.')
         }
     }
 

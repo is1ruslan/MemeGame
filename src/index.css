@@ -13,7 +13,9 @@ body {
 
 .game{
   background: linear-gradient(to bottom, #8edeff 0%, #edf7fc 100%);
+  width: 100vw;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 a {
@@ -286,6 +288,15 @@ footer svg:hover {
   width: 15vw;
   height: 15vw;
   margin: 5px;
+}
+
+.nomeme {
+  display: block;
+  width: 15vw;
+  height: 15vw;
+  margin: 5px;
+  background-color: transparent;
+  border: none;
 }
 
 .bottom-buttons {
