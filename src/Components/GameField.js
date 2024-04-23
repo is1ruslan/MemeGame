@@ -127,13 +127,15 @@ export default function GameField () {
     }
 
     const voteForMeme = (selectedUsername) => {
-        if (socket && socket.readyState === WebSocket.OPEN && selectedUsername !== username) {
-            socket.send(JSON.stringify({
-                method: 'voteForMeme',
-                voter: username,
-                voteFor: selectedUsername,
-                id: params.id
-            }))
+        if (socket && socket.readyState === WebSocket.OPEN && gameState.users[selectedUsername].selectedMeme) {
+            if (countUsers === 1 || selectedUsername !== username) {
+                socket.send(JSON.stringify({
+                    method: 'voteForMeme',
+                    voter: username,
+                    voteFor: selectedUsername,
+                    id: params.id
+                }))
+            }
         }
     }
 
